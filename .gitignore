@@ -1,0 +1,8 @@
+NER/data/
+OCR/data/
+
+*.pyc
+__pycache__/
+
+.venv/
+.env

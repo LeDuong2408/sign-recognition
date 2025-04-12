@@ -1,0 +1,2 @@
+create env: conda env create -f requirments.yml
+del env: conda remove --name sr --all
