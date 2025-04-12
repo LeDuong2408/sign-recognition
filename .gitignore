@@ -1,6 +1,6 @@
 NER/data/
 OCR/data/
-
+OCR/experiments/
 *.pyc
 __pycache__/
 

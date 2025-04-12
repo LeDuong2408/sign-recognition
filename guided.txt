@@ -1,2 +1,3 @@
-create env: conda env create -f requirments.yml
+create requirements file: conda env export -n sr > requirements.yml
+create env: conda env create -f requirements.yml
 del env: conda remove --name sr --all
