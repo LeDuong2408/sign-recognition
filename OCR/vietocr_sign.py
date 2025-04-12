@@ -1,25 +1,35 @@
+import os
+import sys
+import logging
+import warnings
+os.environ['FLAGS_log_level'] = '3'
+logging.getLogger("ppocr").setLevel(logging.ERROR)
+warnings.filterwarnings("ignore")
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 import cv2
+import torch
 import numpy as np
+from PIL import Image
 import matplotlib.pyplot as plt
+import matplotlib.gridspec as gridspec
 from paddleocr import PaddleOCR
 from vietocr.tool.predictor import Predictor
 from vietocr.tool.config import Cfg
-from PIL import Image
-import matplotlib.gridspec as gridspec
+from OCR.config import PATH_VGG_MODEL, device, LANG, PATH_IMAGE
 
 def load_vietocr_model():
     config = Cfg.load_config_from_name('vgg_transformer')
-    config['weights'] = 'vgg_transformer.pth'
-    config['device'] = 'cuda'  # hoặc 'cpu'
+    config['weights'] = PATH_VGG_MODEL
+    config['device'] = device
     return Predictor(config)
 
 def auto_rotate_image(image_path):
     image = cv2.imread(image_path)
     if image is None:
-        print("❌ Không thể đọc ảnh.")
+        print("Cannot read image!!!")
         return None, None
 
-    ocr = PaddleOCR(use_angle_cls=True, lang='vi')
+    ocr = PaddleOCR(use_angle_cls=True, lang=LANG)
     result = ocr.ocr(image_path, cls=True)
 
     angles = []
@@ -33,7 +43,6 @@ def auto_rotate_image(image_path):
 
     if angles:
         avg_angle = np.mean(angles)
-        print(f"📐 Góc xoay trung bình: {avg_angle:.2f}°")
     else:
         return image, image
 
@@ -41,7 +50,6 @@ def auto_rotate_image(image_path):
     center = (w // 2, h // 2)
     rot_mat = cv2.getRotationMatrix2D(center, avg_angle, 1.0)
     rotated = cv2.warpAffine(image, rot_mat, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
-
     return image, rotated
 
 def detect_text_with_vietocr(image, vietocr_model):
@@ -50,7 +58,7 @@ def detect_text_with_vietocr(image, vietocr_model):
                                [0, -1, 0]])
     sharpened = cv2.filter2D(image, -1, sharpen_kernel)
 
-    ocr = PaddleOCR(use_angle_cls=True, lang="vi", det_db_box_thresh=0.3)
+    ocr = PaddleOCR(use_angle_cls=True, lang=LANG, det_db_box_thresh=0.3)
     result = ocr.ocr(sharpened, cls=True)
 
     binary_mask = np.zeros(image.shape[:2], dtype=np.uint8)
@@ -83,37 +91,42 @@ def detect_text_with_vietocr(image, vietocr_model):
             except:
                 recognized_texts.append("[Lỗi OCR]")
 
-    text_only = cv2.bitwise_and(image, image, mask=binary_mask)
-    return text_only, recognized_texts
+    image_text_only = cv2.bitwise_and(image, image, mask=binary_mask)
+    return image_text_only, recognized_texts
+
+def visualize_result(text_image, original, ocr_texts):
+    num_lines = len(ocr_texts)
+    fig_height = max(5, num_lines * 0.4)  # Adjust height based on number of lines
+    fig = plt.figure(figsize=(12, fig_height))
+    gs = gridspec.GridSpec(1, 3, width_ratios=[1, 1, 0.8])
+
+    ax1 = plt.subplot(gs[0])
+    ax1.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
+    ax1.set_title("Ảnh gốc (đã xoay)")
+    ax1.axis("off")
+
+    ax2 = plt.subplot(gs[1])
+    ax2.imshow(cv2.cvtColor(text_image, cv2.COLOR_BGR2RGB))
+    ax2.set_title("Ảnh vùng chữ")
+    ax2.axis("off")
+
+    ax3 = plt.subplot(gs[2])
+    ax3.axis("off")
+    ax3.set_title("📝 Văn bản OCR", fontsize=12, loc='left')
+    full_text = "\n".join([f"{i+1}. {txt}" for i, txt in enumerate(ocr_texts)])
+    ax3.text(0, 1, full_text, fontsize=10, va='top', ha='left', wrap=True)
+
+    plt.tight_layout()
+    plt.show()
 
 if __name__ == "__main__":
-    image_path = r"E:\HocTap\KLTN\bien_hieu5.png"
-    vietocr_model = load_vietocr_model()
+    image_path = PATH_IMAGE
     original, rotated = auto_rotate_image(image_path)
+    vietocr_model = load_vietocr_model()
 
     if rotated is not None:
         text_image, ocr_texts = detect_text_with_vietocr(rotated, vietocr_model)
+        visualize_result(text_image, original, ocr_texts)
+        print(ocr_texts)
 
-        num_lines = len(ocr_texts)
-        fig_height = max(5, num_lines * 0.4)  # tự tăng chiều cao theo số dòng
-        fig = plt.figure(figsize=(12, fig_height))
-        gs = gridspec.GridSpec(1, 3, width_ratios=[1, 1, 0.8])
-
-        ax1 = plt.subplot(gs[0])
-        ax1.imshow(cv2.cvtColor(original, cv2.COLOR_BGR2RGB))
-        ax1.set_title("Ảnh gốc (đã xoay)")
-        ax1.axis("off")
-
-        ax2 = plt.subplot(gs[1])
-        ax2.imshow(cv2.cvtColor(text_image, cv2.COLOR_BGR2RGB))
-        ax2.set_title("Ảnh vùng chữ")
-        ax2.axis("off")
-
-        ax3 = plt.subplot(gs[2])
-        ax3.axis("off")
-        ax3.set_title("📝 Văn bản OCR", fontsize=12, loc='left')
-        full_text = "\n".join([f"{i+1}. {txt}" for i, txt in enumerate(ocr_texts)])
-        ax3.text(0, 1, full_text, fontsize=10, va='top', ha='left', wrap=True)
-
-        plt.tight_layout()
-        plt.show()
+        
