@@ -2,7 +2,9 @@ NER/data/*
 NER/out/*
 OCR/data/*
 OCR/experiments/*
-
+!NER/data/.gitkeep
+!OCR/data/.gitkeep
+!.gitignore
 *.pyc
 __pycache__/
 

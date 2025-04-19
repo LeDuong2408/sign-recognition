@@ -1,0 +1,3 @@
+touch ./OCR/data/.gitkeep
+git add ./OCR/data/.gitkeep
+git commit -m "Keep empty_folder in repo"
