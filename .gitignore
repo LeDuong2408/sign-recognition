@@ -1,4 +1,5 @@
 NER/data/
+NER/out/
 OCR/data/
 OCR/experiments/
 *.pyc
