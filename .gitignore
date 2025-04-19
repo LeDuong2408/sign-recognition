@@ -1,7 +1,8 @@
-NER/data/
-NER/out/
-OCR/data/
-OCR/experiments/
+NER/data/*
+NER/out/*
+OCR/data/*
+OCR/experiments/*
+
 *.pyc
 __pycache__/
 
