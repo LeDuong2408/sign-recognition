@@ -4,6 +4,7 @@ OCR/data/*
 OCR/experiments/*
 !NER/data/.gitkeep
 !OCR/data/.gitkeep
+!OCR/experiments/.gitkeep
 !.gitignore
 *.pyc
 __pycache__/
