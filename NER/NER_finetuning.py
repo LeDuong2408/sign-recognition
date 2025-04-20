@@ -1,7 +1,7 @@
 
 import os
 import torch
-from transformers import AutoModelForTokenClassification, AutoTokenizer
+from transformers import AutoModelForTokenClassification, AutoTokenizer, PreTrainedTokenizerFast, DataCollatorForTokenClassification
 from torch.utils.data import DataLoader
 from NER_dataset import load_ner_dataset
 from NER_config import *
@@ -11,7 +11,27 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"Using device: {device}")
 
-    tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2", use_fast=True)
+    # tokenizer = AutoTokenizer.from_pretrained("vinai/phobert-base-v2", use_fast=True)
+
+    tokenizer = PreTrainedTokenizerFast.from_pretrained(
+            "vinai/phobert-base-v2", use_fast=True
+        )
+    
+    added_new_token = False
+    if tokenizer.eos_token is None:
+        print("Warning: eos_token is None. Adding a default one '</s>'.")
+        tokenizer.add_special_tokens({'eos_token': '</s>'}) # phoBERT 
+        added_new_token = True 
+
+    if tokenizer.pad_token is None:
+        # print(f"Setting pad_token to eos_token: {tokenizer.eos_token}")
+        tokenizer.pad_token = tokenizer.eos_token
+    else:
+        print(f"Tokenizer already has pad_token: {tokenizer.pad_token}")
+
+    # print(f"Tokenizer pad token: {tokenizer.pad_token}, ID: {tokenizer.pad_token_id}")
+    # print(f"Tokenizer vocabulary size: {len(tokenizer)}")
+
 
     # Load datasets
     train_dataset = load_ner_dataset(
@@ -27,9 +47,13 @@ def main():
         max_length=MAX_LENGTH
     )
 
+    data_collator = DataCollatorForTokenClassification(
+        tokenizer, label_pad_token_id=-100
+    )
+
     # DataLoader
-    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True)
-    val_loader   = DataLoader(val_dataset,   batch_size=BATCH_SIZE, shuffle=False)
+    train_loader = DataLoader(train_dataset, batch_size=BATCH_SIZE, shuffle=True, collate_fn=data_collator)
+    val_loader   = DataLoader(val_dataset,   batch_size=BATCH_SIZE, shuffle=False, collate_fn=data_collator)
 
     # Load model phobert base v2
     model = AutoModelForTokenClassification.from_pretrained(
@@ -39,6 +63,23 @@ def main():
         label2id=LABELS2ID
     )
 
+    # print(f"Original model embedding size: {model.config.vocab_size}")
+
+    if len(tokenizer) > model.config.vocab_size:
+        # print(f"Resizing model embeddings from {model.config.vocab_size} to {len(tokenizer)}")
+        model.resize_token_embeddings(len(tokenizer))
+        # model.config.vocab_size = len(tokenizer) # Thường không cần thiết nếu dùng resize_token_embeddings
+    elif added_new_token and len(tokenizer) == model.config.vocab_size :
+        # print(f"Resizing model embeddings to {len(tokenizer)} (even if size seems unchanged after adding token).")
+        model.resize_token_embeddings(len(tokenizer))
+
+
+    if tokenizer.pad_token_id is not None:
+         model.config.pad_token_id = tokenizer.pad_token_id
+        #  print(f"Updated model config pad_token_id to: {model.config.pad_token_id}")
+
+
+    model.to(device)
     # Fine-tune
     best_val_loss, best_val_acc, std_acc = train_model(
         phobert_model    = model,
