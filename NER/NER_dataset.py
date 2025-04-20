@@ -55,10 +55,11 @@ def load_ner_dataset(
         sentences,
         is_split_into_words=True,
         return_attention_mask=True,
-        padding="max_length",
+        padding=False,
         truncation=True,
         max_length=max_length
     )
+
     all_label_ids = []
     for i, tag_seq in enumerate(labels):
         word_ids = encodings.word_ids(batch_index=i)
@@ -68,7 +69,6 @@ def load_ner_dataset(
             if word_idx is None:
                 label_ids.append(-100)
             elif word_idx != prev_word_idx:
-
                 label_ids.append(label2id[tag_seq[word_idx]])
             else:
                 label_ids.append(-100)

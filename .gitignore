@@ -1,8 +1,10 @@
 NER/data/*
-NER/out/*
+NER/out/checkpoints/*
+NER/out/logs/*
 OCR/data/*
 OCR/experiments/*
 !NER/data/.gitkeep
+!NER/data/preprocess.py
 !OCR/data/.gitkeep
 !OCR/experiments/.gitkeep
 !.gitignore
