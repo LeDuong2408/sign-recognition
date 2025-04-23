@@ -2,8 +2,10 @@ from transformers import AutoTokenizer
 from transformers import PreTrainedTokenizerFast
 import json
 import os
-INPUT_JSON = "./NER/data/hoang536.json"
-OUTPUT_CONLL = "./NER/data/train.txt"
+import random
+
+INPUT_JSON = "./NER/data/1001.json"
+OUTPUT_CONLL = "./NER/data/train1001.txt"
 
 def create_json_file(path_raw_data, path_save_data):
     '''
@@ -21,8 +23,7 @@ def create_json_file(path_raw_data, path_save_data):
     with open(path_save_data, "w", encoding="utf-8") as f:
         json.dump(data, f, ensure_ascii=False, indent=2)
 
-# create_json_file("./NER/data/raw_data.txt", "./NER/data/train.json")
-def create_train_data_conll(path_raw_data, path_save_data):
+def create_train_data_conll(path_labeling_data, path_save_data):
 
     os.makedirs(os.path.dirname(path_save_data), exist_ok=True)
 
@@ -31,7 +32,7 @@ def create_train_data_conll(path_raw_data, path_save_data):
         "vinai/phobert-base", use_fast=True
     )
 
-    with open(path_raw_data, encoding="utf-8") as f, open(path_save_data, "w", encoding="utf-8") as out:
+    with open(path_labeling_data, encoding="utf-8") as f, open(path_save_data, "w", encoding="utf-8") as out:
         tasks = json.load(f)
         for task in tasks:
             text = task["data"]["text"]
@@ -69,5 +70,19 @@ def create_train_data_conll(path_raw_data, path_save_data):
 
     print(f"Processed and saved to {path_save_data}")
 
+def split_train_val_data(path_data, path_train, path_val, val_size=0.1):
+    with open(path_data, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+    num_val = int(len(lines) * val_size)
+    with open(path_train, "w", encoding="utf-8") as f:
+        f.writelines(lines[:-num_val])
+    with open(path_val, "w", encoding="utf-8") as f:
+        f.writelines(lines[-num_val:])
+
 if __name__ == "__main__":
-    create_train_data_conll(INPUT_JSON, OUTPUT_CONLL)
+    # create_json_file("./NER/data/text.txt", "./NER/data/hoang.json")
+    # create_train_data_conll(INPUT_JSON, OUTPUT_CONLL)
+    split_train_val_data(   path_data = "./NER/data/train1001.txt", 
+                            path_train = "./NER/data/train.txt",
+                            path_val = "./NER/data/val.txt",
+                            val_size = 0.1)

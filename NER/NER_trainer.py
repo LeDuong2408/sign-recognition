@@ -34,7 +34,7 @@ def train_model(phobert_model,
     os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.join(log_dir, "training.log")
     with open(log_file, "w") as f:
-        f.write("Epoch,TrainLoss,ValLoss,ValAcc,ValAccStd\n")
+        f.write("Epoch, Train Loss, Val Loss, Val Acc, Val Acc Std\n")
 
     for epoch in range(1, epochs + 1):
         phobert_model.train()
@@ -73,13 +73,13 @@ def train_model(phobert_model,
             "epoch": epoch
         }
         if epoch % save_epochfreq == 0:
-            torch.save(state, os.path.join(run_dir, f"ckpt_epoch{epoch}.pt"))
+            torch.save(state, os.path.join(run_dir, f"checkpoint_epoch{epoch}.pt"))
        
-        torch.save(state, os.path.join(run_dir, "ckpt_latest.pt"))
+        torch.save(state, os.path.join(run_dir, "checkpoint_latest.pt"))
         if val_loss < best_val_loss:
             best_val_loss = val_loss
             best_val_reward = avg_reward
-            torch.save(state, os.path.join(run_dir, "ckpt_best.pt"))
+            torch.save(state, os.path.join(run_dir, "checkpoint_best.pt"))
             print(f"[Epoch {epoch}] Saved new best model (ValLoss={val_loss:.4f})")
 
         
