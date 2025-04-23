@@ -54,7 +54,7 @@ def load_ner_dataset(
     encodings = tokenizer(
         sentences,
         is_split_into_words=True,
-        return_attention_mask=True,
+        return_attention_mask=True, # can compare token padding and true token
         padding=False,
         truncation=True,
         max_length=max_length
