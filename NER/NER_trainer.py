@@ -4,7 +4,7 @@ import numpy as np
 from tqdm import tqdm
 from torch import nn
 
-def train_model(phobert_model,
+def train_model(model,
                 train_loader,
                 val_loader,
                 epochs,
@@ -20,24 +20,23 @@ def train_model(phobert_model,
 
     if device is None:
         device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
-    phobert_model.to(device)
+    model.to(device)
 
-    optimizer = torch.optim.AdamW(phobert_model.parameters(), lr=learning_rate) 
+    optimizer = torch.optim.AdamW(model.parameters(), lr=learning_rate) 
     scheduler = torch.optim.lr_scheduler.StepLR(optimizer, step_size=lr_step_size, gamma=lr_gamma)
 
     # Loss function: bỏ qua label = -100 (padding/subword)
     loss_fn = nn.CrossEntropyLoss(ignore_index=-100) 
 
     best_val_loss = float("inf")
-    best_val_reward = 0.0
 
     os.makedirs(log_dir, exist_ok=True)
     log_file = os.path.join(log_dir, "training.log")
     with open(log_file, "w") as f:
-        f.write("Epoch, Train Loss, Val Loss, Val Acc, Val Acc Std\n")
+        f.write("Epoch, Train Loss, Val Loss, Val Acc\n")
 
     for epoch in range(1, epochs + 1):
-        phobert_model.train()
+        model.train()
         total_train_loss = 0.0
 
         for batch in tqdm(train_loader, desc=f"Epoch {epoch}/{epochs} [Training]"):
@@ -47,7 +46,7 @@ def train_model(phobert_model,
             labels = batch["labels"].to(device)
 
             optimizer.zero_grad()
-            outputs = phobert_model(input_ids=input_ids,
+            outputs = model(input_ids=input_ids,
                                    attention_mask=attention_mask,
                                    labels=labels)
             loss = outputs.loss  # HuggingFace trả về loss khi truyền labels
@@ -60,44 +59,44 @@ def train_model(phobert_model,
         scheduler.step()
 
         save_preds = (epoch % save_pred_epoch == 0)
-        val_loss, avg_reward, std_reward = eval_model(
-            phobert_model, val_loader, loss_fn, device,
+        val_loss, val_acc = eval_model(
+            model, val_loader, loss_fn, device,
             save_pred_dir if save_preds else None, save_preds
         )
 
         os.makedirs(run_dir, exist_ok=True)
         state = {
-            "model_state": phobert_model.state_dict(),
+            "model_state": model.state_dict(),
             "optimizer_state": optimizer.state_dict(),
             "scheduler_state": scheduler.state_dict(),
             "epoch": epoch
         }
         if epoch % save_epochfreq == 0:
-            torch.save(state, os.path.join(run_dir, f"checkpoint_epoch{epoch}.pt"))
+            torch.save(state, os.path.join(run_dir, f"checkpoint_epoch{epoch}.pkl"))
        
-        torch.save(state, os.path.join(run_dir, "checkpoint_latest.pt"))
+        torch.save(state, os.path.join(run_dir, "checkpoint_latest.pkl"))
         if val_loss < best_val_loss:
             best_val_loss = val_loss
-            best_val_reward = avg_reward
-            torch.save(state, os.path.join(run_dir, "checkpoint_best.pt"))
+            best_val_acc = val_acc
+            torch.save(state, os.path.join(run_dir, "checkpoint_best.pkl"))
             print(f"[Epoch {epoch}] Saved new best model (ValLoss={val_loss:.4f})")
 
         
         with open(log_file, "a") as f:
-            f.write(f"{epoch},{avg_train_loss:.4f},{val_loss:.4f},{avg_reward:.4f},{std_reward:.4f}\n")
+            f.write(f"{epoch},{avg_train_loss:.4f},{val_loss:.4f},{val_acc:.4f}\n")
 
         print(f"[Epoch {epoch}/{epochs}] TrainLoss={avg_train_loss:.4f} | "
-              f"ValLoss={val_loss:.4f} | ValAcc={avg_reward:.4f} ± {std_reward:.4f}")
+              f"ValLoss={val_loss:.4f} | ValAcc={val_acc:.4f}")
 
-    return best_val_loss, best_val_reward, std_reward
+    return best_val_loss, best_val_acc
 
 
-def eval_model(phobert_model, val_loader, loss_fn, device,
+def eval_model(model, val_loader, loss_fn, device,
                save_pred_dir=None, save_pred=False):
 
-    phobert_model.eval()
+    model.eval()
     total_loss = 0.0
-    rewards_all = []
+    acc_all = []
 
     with torch.no_grad():
         for batch in tqdm(val_loader, desc="Validation"):
@@ -105,7 +104,7 @@ def eval_model(phobert_model, val_loader, loss_fn, device,
             attention_mask = batch["attention_mask"].to(device)
             labels = batch["labels"].to(device)
 
-            outputs = phobert_model(input_ids=input_ids,
+            outputs = model(input_ids=input_ids,
                                    attention_mask=attention_mask,
                                    labels=labels)
             loss = outputs.loss
@@ -115,21 +114,20 @@ def eval_model(phobert_model, val_loader, loss_fn, device,
 
             # Tính token-level accuracy cho mỗi sample
             preds = torch.argmax(logits, dim=-1)
-            batch_rewards = []
+            batch_acc = []
             for p, l in zip(preds, labels):
                 mask = (l != -100)
                 correct = (p[mask] == l[mask]).sum().item()
                 total = mask.sum().item()
-                batch_rewards.append(correct / total if total > 0 else 0.0)
-            rewards_all.append(np.array(batch_rewards))
+                batch_acc.append(correct / total if total > 0 else 0.0)
+            acc_all.append(np.array(batch_acc))
 
     avg_loss = total_loss / len(val_loader)
-    rewards_all = np.concatenate(rewards_all)
-    avg_reward = float(np.mean(rewards_all))
-    std_reward = float(np.std(rewards_all))
+    acc_all = np.concatenate(acc_all)
+    val_acc = float(np.mean(acc_all))
 
     if save_pred and save_pred_dir is not None:
         os.makedirs(save_pred_dir, exist_ok=True)
-        np.save(os.path.join(save_pred_dir, "val_rewards.npy"), rewards_all)
+        np.save(os.path.join(save_pred_dir, "val_rewards.npy"), val_acc)
 
-    return avg_loss, avg_reward, std_reward
+    return avg_loss, val_acc
