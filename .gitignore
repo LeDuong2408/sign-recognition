@@ -7,6 +7,8 @@ OCR/experiments/*
 !NER/data/preprocess.py
 !OCR/data/.gitkeep
 !OCR/experiments/.gitkeep
+!NER/data/metrics.txt
+!NER/data/metrics_VLSP2018.txt
 !.gitignore
 *.pyc
 __pycache__/

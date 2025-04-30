@@ -65,8 +65,8 @@ def load_ner_dataset(
 
     # 3) Align nhãn từ tag_seqs sang encodings["input_ids"]
     all_label_ids = []
-    for i, tags in enumerate(tag_seqs):
-        word_ids = encodings.word_ids(batch_index=i)
+    for i, tags in enumerate(tag_seqs): # tag_seqs (1653, len(seq)) chứa labels từng câu
+        word_ids = encodings.word_ids(batch_index=i) # len = max_length = 128
         prev_word_idx = None
         label_ids = []
         for word_idx in word_ids:
