@@ -46,6 +46,7 @@ def merge_wordpieces(text):
         else:
             result.append(token)
     return ' '.join(result)
+
 def extract_phone_number(text):
    
     pattern = r"\b\d{4}[\s\.-]?\d{4}[\s\.-]?\d{3}\b"
@@ -79,11 +80,12 @@ if __name__ == "__main__":
     model.load_state_dict(new_state)
 
     nlp = pipeline("ner", model=model, tokenizer=tokenizer)
-    example = "Quán cà phê Gò Vấp view đẹp tha hồ sống ảo Phen's Coffee - quán cafe đẹp ở Sài Gòn gần sân bay Địa chỉ: 142 Nguyễn Văn Công, Phường 3, Quận Gò Vấp, TP.HCM. 0869981478"
+    example = "Quán cà phê Gò Vấp view đẹp tha hồ sống ảo Phen's Coffee - quán cafe đẹp ở Sài Gòn gần sân bay Địa chỉ: 142 Nguyễn Văn Công, Phường 3, Quận Gò Vấp, TP.HCM. 0208 822-280"
     begin = datetime.now()
     out =  format_out(nlp(example)) + "Tel: " + extract_phone_number(example)
     end = datetime.now()
     print(example)
     print(out)
+    
     # print(nlp(example))
     # print("Time taken: ", (end - begin).total_seconds())

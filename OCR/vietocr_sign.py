@@ -154,3 +154,5 @@ if __name__ == "__main__":
         text_image, ocr_texts = detect_text_with_vietocr(enhanced_image, vietocr_model)
         visualize_result(text_image, original, ocr_texts)
         print(ocr_texts)
+
+
