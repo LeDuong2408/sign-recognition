@@ -1,0 +1,14 @@
+NER/data/
+OCR/data/
+NER/
+OCR/
+POST_OCR/data
+POST_OCR/data_agument_image
+POST_OCR/process_fake_error_ocr
+POST_OCR/vietnamese_ocr_error_corrector
+POST_OCR/ocr_correction_template.ipynb
+*.pyc
+__pycache__/
+
+.venv/
+.env
