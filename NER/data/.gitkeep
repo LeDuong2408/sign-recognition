@@ -1,0 +1,3 @@
+touch ./NER/data/.gitkeep
+git add ./NER/data/.gitkeep
+git commit -m "Keep empty_folder in repo"

@@ -1,5 +1,15 @@
-NER/data/
-OCR/data/
+NER/data/*
+NER/out/checkpoints/*
+NER/out/logs/*
+OCR/data/*
+OCR/experiments/*
+!NER/data/.gitkeep
+!NER/data/preprocess.py
+!OCR/data/.gitkeep
+!OCR/experiments/.gitkeep
+!NER/data/metrics.txt
+!NER/data/metrics_VLSP2018.txt
+!.gitignore
 NER/
 OCR/
 POST_OCR/data
