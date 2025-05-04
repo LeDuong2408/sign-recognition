@@ -115,8 +115,8 @@ def detect_text_with_vietocr(image, vietocr_model):
             except:
                 recognized_texts.append("[Lỗi OCR]")
 
-    text_only = cv2.bitwise_and(image, image, mask=binary_mask)
-    return text_only, recognized_texts
+    # text_only = cv2.bitwise_and(image, image, mask=binary_mask)
+    return None, recognized_texts
 
 def visualize_result(text_image, original, ocr_texts):
     num_lines = len(ocr_texts)
@@ -143,16 +143,26 @@ def visualize_result(text_image, original, ocr_texts):
     plt.tight_layout()
     plt.show()
 
-if __name__ == "__main__":
-    image_path = PATH_IMAGE
+def get_ocr_text(image_path):
     original, rotated = auto_rotate_image(image_path)
     vietocr_model = load_vietocr_model()
     realesrgan_model = load_realesrgan_model()
-
     if rotated is not None:
         enhanced_image = enhance_image_with_realesrgan(rotated, realesrgan_model)
         text_image, ocr_texts = detect_text_with_vietocr(enhanced_image, vietocr_model)
-        visualize_result(text_image, original, ocr_texts)
-        print(ocr_texts)
+        return ocr_texts
+
+if __name__ == "__main__":
+    image_path = PATH_IMAGE
+    print(get_ocr_text(image_path))
+    # original, rotated = auto_rotate_image(image_path)
+    # vietocr_model = load_vietocr_model()
+    # realesrgan_model = load_realesrgan_model()
+
+    # if rotated is not None:
+    #     enhanced_image = enhance_image_with_realesrgan(rotated, realesrgan_model)
+    #     text_image, ocr_texts = detect_text_with_vietocr(enhanced_image, vietocr_model)
+    #     visualize_result(text_image, original, ocr_texts)
+    #     print(ocr_texts)
 
 

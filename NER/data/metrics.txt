@@ -1,13 +1,13 @@
 Metrics for original model:
                 precision    recall  f1-score   support
 
-     LOCATION       0.75      0.86      0.80       567
- ORGANIZATION       0.67      0.24      0.35       386
+     LOCATION       0.68      0.79      0.73      1105
+ ORGANIZATION       0.59      0.23      0.33       778
 
 
 Metrics for finetuned model:
               precision    recall  f1-score   support
 
-    LOCATION       0.94      0.96      0.95       567
-ORGANIZATION       0.97      0.98      0.97       386
+    LOCATION       0.96      0.97      0.96      1105
+ORGANIZATION       0.99      0.99      0.99       778
 

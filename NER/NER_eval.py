@@ -240,10 +240,10 @@ if __name__ == "__main__":
         f.write(metrics_all)
 
 
-    # path_data = "./NER/data/VLSP2018_Test"
-    # result = GenTokenNSavePred_VLSP2018(path_data=path_data, model=nlp, model_finetuned=nlp_finetuned)    
+    path_data = "./NER/data/VLSP2018_Test"
+    result = GenTokenNSavePred_VLSP2018(path_data=path_data, model=nlp, model_finetuned=nlp_finetuned)    
     
-    result = pd.read_csv("./NER/data/result_VLSP2018.csv", encoding="utf-8")
+    # result = pd.read_csv("./NER/data/result_VLSP2018.csv", encoding="utf-8")
     true_labels = result["true_labels"].tolist()
     pred_labels = result["pred_labels"].tolist()
     pred_labels_finetuned = result["pred_labels_finetuned"].tolist()

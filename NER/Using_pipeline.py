@@ -48,24 +48,28 @@ def merge_wordpieces(text):
     return ' '.join(result)
 
 def extract_phone_number(text):
-   
-    pattern = r"\b\d{4}[\s\.-]?\d{4}[\s\.-]?\d{3}\b"
-    match = re.search(pattern, text)
-    if match:
-        raw_phone = match.group(0)
-        phone_number = re.sub(r"[\s\.-]", "", raw_phone)
-        phone_number = phone_number.replace(" ", "")
-        return phone_number
-    
-    pattern = r"\b\d{4}[\s\.-]?\d{3}[\s\.-]?\d{3}\b"
-    match = re.search(pattern, text)
-    if match:
-        raw_phone = match.group(0)
-        phone_number = re.sub(r"[\s\.-]", "", raw_phone)
-        phone_number = phone_number.replace(" ", "")
-        return phone_number
+    NUMERIC_PATTERN = r"\b\d{3,4}(?:[\s\.-]?\d{3,4}){2}\b"
+    PREFIX_PATTERN = r"\b(?:SDT|SĐT|PHONE|TEL)[\s:\.-]*(\d{3,4}(?:[\s\.-]?\d{3,4}){2})\b"
+    m = re.search(NUMERIC_PATTERN, text, flags=re.IGNORECASE)
+    if m:
+        raw = m.group(0)
+        return re.sub(r"[\s\.-]", "", raw)
+
+    m = re.search(PREFIX_PATTERN, text, flags=re.IGNORECASE)
+    if m:
+        raw = m.group(1)
+        return re.sub(r"[\s\.-]", "", raw)
+
+    return None
         
-    
+def get_ner_result(text, nlp):
+    phone = extract_phone_number(text)
+    if phone:
+        out =  format_out(nlp(text)) + "Tel: " + phone
+    else:
+        out =  format_out(nlp(text)) + "Tel: "
+    return out
+
 if __name__ == "__main__":
 
     tokenizer = AutoTokenizer.from_pretrained("NlpHUST/ner-vietnamese-electra-base")
@@ -80,9 +84,10 @@ if __name__ == "__main__":
     model.load_state_dict(new_state)
 
     nlp = pipeline("ner", model=model, tokenizer=tokenizer)
-    example = "Quán cà phê Gò Vấp view đẹp tha hồ sống ảo Phen's Coffee - quán cafe đẹp ở Sài Gòn gần sân bay Địa chỉ: 142 Nguyễn Văn Công, Phường 3, Quận Gò Vấp, TP.HCM. 0208 822-280"
+    example = "TAPHSA BLAVIED EGOCTAN 000 NGƯỜI OVỚI THỊ DIỄNG CUDO VÒNG TƯU DIA BỊA RƯỢU - BÁNH KEO - THUỐC LÁN NƯỚC GIẢI KHÁT CÁC LOẠI ĐỊC: 140 ĐƯỜNG MINH CẤU - TP. THÁI NGUYÊN-Đ/2.092.41 TẠ ?099 909 301"
+    # example = example.upper()
     begin = datetime.now()
-    out =  format_out(nlp(example)) + "Tel: " + extract_phone_number(example)
+    out =  get_ner_result(example, nlp)
     end = datetime.now()
     print(example)
     print(out)
