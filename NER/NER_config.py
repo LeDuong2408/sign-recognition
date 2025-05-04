@@ -44,5 +44,5 @@ SAVE_PRED_DIR   = "predictions"
 PATH_SAVE_TOKENIZER = "./NER/out/tokenizer/"
 
 # Training data paths
-PATH_TRAIN = "./NER/data/train_electra.txt"
-PATH_VAL   = "./NER/data/eval_electra.txt"
+PATH_TRAIN = "./NER/data/electra-vn/train_electra.txt"
+PATH_VAL   = "./NER/data/electra-vn/eval_electra.txt"

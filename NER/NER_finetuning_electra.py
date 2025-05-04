@@ -1,7 +1,7 @@
 import os
 import torch
 from torch import nn
-from transformers import AutoModelForTokenClassification, AutoTokenizer, PreTrainedTokenizerFast, DataCollatorForTokenClassification
+from transformers import AutoModelForTokenClassification, AutoTokenizer, DataCollatorForTokenClassification
 from torch.utils.data import DataLoader
 from NER_dataset import load_ner_dataset
 from NER_config import *
@@ -56,7 +56,7 @@ def finetuning_NER():
 
     model.load_state_dict(torch.load("./NER/out/checkpoints/checkpoint_best.pkl", map_location=torch.device(device))["model_state"])
     val_loss, avg_acc = eval_model(
-        phobert_model = model,
+        model = model,
         val_loader    = val_loader,
         loss_fn       = nn.CrossEntropyLoss(ignore_index=-100),
         device        = device,
