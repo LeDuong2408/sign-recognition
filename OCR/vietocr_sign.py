@@ -152,6 +152,13 @@ def get_ocr_text(image_path):
         text_image, ocr_texts = detect_text_with_vietocr(enhanced_image, vietocr_model)
         return ocr_texts
 
+def get_ocr_text2(image_path):
+    original, rotated = auto_rotate_image(image_path)
+    vietocr_model = load_vietocr_model()
+    if rotated is not None:
+        text_image, ocr_texts = detect_text_with_vietocr(rotated, vietocr_model)
+        return ocr_texts
+
 if __name__ == "__main__":
     image_path = PATH_IMAGE
     print(get_ocr_text(image_path))

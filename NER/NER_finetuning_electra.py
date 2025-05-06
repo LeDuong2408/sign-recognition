@@ -54,7 +54,7 @@ def finetuning_NER():
 
     print(f"Best Val Loss: {best_val_loss:.4f}, Best Val Acc: {best_val_acc:.4f}")
 
-    model.load_state_dict(torch.load("./NER/out/checkpoints/checkpoint_best.pkl", map_location=torch.device(device))["model_state"])
+    model.load_state_dict(torch.load(os.path.join(RUN_DIR, "checkpoint_best.pkl"), map_location=torch.device(device))["model_state"])
     val_loss, avg_acc = eval_model(
         model = model,
         val_loader    = val_loader,

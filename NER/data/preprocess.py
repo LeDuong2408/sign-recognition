@@ -163,10 +163,25 @@ def clear_punctuation(path_data):
         for line in all_data:
             f.write(line + "\n")
 
+def uppercase_text(path_data):
+    all_data = []
+    with open(path_data, "r", encoding="utf-8") as f:
+        lines = f.readlines()
+        for line in lines:
+            line = line.strip()
+            if line:
+                line = line.upper()
+            all_data.append(line)
+
+    with open(path_data, "a", encoding="utf-8") as f:
+        for line in all_data:
+            f.write(line + "\n")
+
 if __name__ == "__main__":
     # create_json_file("./NER/data/text.txt", "./NER/data/hoang.json")
     # create_train_data_conll(INPUT_JSON, OUTPUT_CONLL)
     # clear_punctuation("./NER/data/electra-vn/all_electra.txt")
+    uppercase_text("./NER/data/electra-vn/all_electra.txt")
     split_train_val_data(   path_data = "./NER/data/electra-vn/all_electra.txt", 
                             path_train = "./NER/data/electra-vn/train_electra.txt",
                             path_val = "./NER/data/electra-vn/eval_electra.txt",
