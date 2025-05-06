@@ -50,17 +50,16 @@ def merge_wordpieces(text):
 def extract_phone_number(text):
     NUMERIC_PATTERN = r"\b\d{3,4}(?:[\s\.-]?\d{3,4}){2}\b"
     PREFIX_PATTERN = r"\b(?:SDT|SĐT|PHONE|TEL)[\s:\.-]*(\d{3,4}(?:[\s\.-]?\d{3,4}){2})\b"
-    m = re.search(NUMERIC_PATTERN, text, flags=re.IGNORECASE)
-    if m:
-        raw = m.group(0)
-        return re.sub(r"[\s\.-]", "", raw)
 
-    m = re.search(PREFIX_PATTERN, text, flags=re.IGNORECASE)
-    if m:
-        raw = m.group(1)
-        return re.sub(r"[\s\.-]", "", raw)
+    matches_numeric = re.findall(NUMERIC_PATTERN, text, flags=re.IGNORECASE)
+    matches_prefix = re.findall(PREFIX_PATTERN, text, flags=re.IGNORECASE)
 
-    return None
+    all_matches = matches_numeric + matches_prefix
+    cleaned = [re.sub(r"[\s\.-]", "", m) for m in all_matches]
+
+    unique_numbers = " - ".join(cleaned)
+    
+    return unique_numbers if unique_numbers else None
         
 def get_ner_result(text, nlp):
     phone = extract_phone_number(text)
@@ -83,14 +82,26 @@ if __name__ == "__main__":
         new_state[new_key] = v
     model.load_state_dict(new_state)
 
-    nlp = pipeline("ner", model=model, tokenizer=tokenizer)
-    example = "TAPHSA BLAVIED EGOCTAN 000 NGƯỜI OVỚI THỊ DIỄNG CUDO VÒNG TƯU DIA BỊA RƯỢU - BÁNH KEO - THUỐC LÁN NƯỚC GIẢI KHÁT CÁC LOẠI ĐỊC: 140 ĐƯỜNG MINH CẤU - TP. THÁI NGUYÊN-Đ/2.092.41 TẠ ?099 909 301"
-    # example = example.upper()
-    begin = datetime.now()
-    out =  get_ner_result(example, nlp)
-    end = datetime.now()
-    print(example)
-    print(out)
+    # nlp = pipeline("ner", model=model, tokenizer=tokenizer)
+    # example = "tạp hóa phú mỹ, 621 đường huỲnh văn luỲ p. phú mỸ tp. thủ đầu mỘt bd, SDT0908 123 456"
+    # # example = example.upper()
+    # begin = datetime.now()
+    # out =  get_ner_result(example, nlp)
+    # end = datetime.now()
+    # print(example)
+    # print(out)
     
     # print(nlp(example))
     # print("Time taken: ", (end - begin).total_seconds())
+
+    model.push_to_hub("duongai248/ner-location-vietnam")
+    tokenizer.push_to_hub("duongai248/ner-location-vietnam")
+
+    # from huggingface_hub import HfApi
+    # import os
+    # api = HfApi(token=os.getenv("HF_TOKEN"))
+    # api.upload_folder(
+    #     folder_path= "F:/University_HCMUTE/N4_HK2/KLTN/Sign_Recognition/NER/data/electra-vn",
+    #     repo_id="duongai248/ner-location-vietnam",
+    #     repo_type="dataset",
+    # )
