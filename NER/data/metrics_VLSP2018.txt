@@ -1,0 +1,14 @@
+Metrics for original model:
+                precision    recall  f1-score   support
+
+     LOCATION       0.75      0.90      0.82      1908
+ ORGANIZATION       0.49      0.61      0.54      1944
+
+
+
+Metrics for finetuned model:
+               precision    recall  f1-score   support
+
+     LOCATION       0.49      0.48      0.48      1908
+ ORGANIZATION       0.38      0.60      0.46      1944
+

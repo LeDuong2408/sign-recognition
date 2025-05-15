@@ -11,7 +11,6 @@ OCR/output/*
 !NER/data/metrics.txt
 !NER/data/metrics_VLSP2018.txt
 !.gitignore
-NER/
 OCR/data
 OCR/input_image
 OCR/output
