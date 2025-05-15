@@ -1,0 +1,2 @@
+config_name: 'vgg_transformer'
+weights: 'OCR/weights/transformerocr.pth'

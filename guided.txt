@@ -1,0 +1,4 @@
+create requirements file: conda env export -n sr > requirements.yml
+create env: conda env create -f requirements.yml
+del env: conda remove --name sr --all
+install BasicSR model:  pip install git+https://github.com/XPixelGroup/BasicSR.git
