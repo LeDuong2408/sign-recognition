@@ -93,7 +93,7 @@ def adaptive_eps(word_boxes):
 
     return avg_height * eps_factor
 
-def fallback_cluster_unmatched_words(unmatched_word_boxes, unmatched_texts, line_boxes, line_groups, shape, eps_ratio=0.7, alpha=0.15, iow_merge_thresh=0.1):
+def fallback_cluster_unmatched_words(unmatched_word_boxes, unmatched_texts, line_boxes, line_groups, shape, eps_ratio=0.7, alpha=0.15, iow_merge_thresh=0.15):
     """
     Gom nhóm các từ không khớp với line nào thành các dòng mới bằng clustering,
     sử dụng (center_x * alpha, center_y) để giảm sai khi các từ cách xa nhau theo chiều ngang.
@@ -131,19 +131,19 @@ def fallback_cluster_unmatched_words(unmatched_word_boxes, unmatched_texts, line
         # tạo box bao quanh tất cả các từ trong nhóm
         # kiểm tra nó giao với line box nào thì gán vào đó
         # nếu không thì tạo một line mới
-        cluster_box = merge_boxes([box for box, _ in group])
-        cluster_box = pad_bbox(cluster_box, 30, shape) 
-        best_iow = 0
-        best_line_idx = -1
-        for idx, line_box in enumerate(line_boxes):
-            iow = compute_iow(cluster_box, line_box)
-            if iow > best_iow:
-                best_iow = iow
-                best_line_idx = idx
+        # cluster_box = merge_boxes([box for box, _ in group])
+        # cluster_box = pad_bbox(cluster_box, 10, shape) 
+        # best_iow = 0
+        # best_line_idx = -1
+        # for idx, line_box in enumerate(line_boxes):
+        #     iow = compute_iow(cluster_box, line_box)
+        #     if iow > best_iow:
+        #         best_iow = iow
+        #         best_line_idx = idx
                 
-        if best_iow >= iow_merge_thresh and best_line_idx != -1:
-            line_groups[best_line_idx].extend(group)
-        else:
-            new_lines.append(group)
-
+        # if best_iow >= iow_merge_thresh and best_line_idx != -1:
+        #     line_groups[best_line_idx].extend(group)
+        # else:
+        #     new_lines.append(group)
+        new_lines.append(group)
     return new_lines

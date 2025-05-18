@@ -16,6 +16,7 @@ OCR/input_image
 OCR/output
 OCR/train/train_lmdb
 OCR/train/valid_lmdb
+OCR/detector/signboard_detection_and_recognition
 POST_OCR/data
 POST_OCR/data_agument_image
 POST_OCR/process_fake_error_ocr

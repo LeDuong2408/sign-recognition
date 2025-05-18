@@ -44,7 +44,7 @@ optimizer:
   pct_start: 0.1
 predictor:
   beamsearch: false
-pretrain: https://vocr.vn/data/vietocr/vgg_transformer.pth
+pretrain: OCR/weights/vgg_transformer.pth
 quiet: false
 seq_modeling: transformer
 trainer:
@@ -66,4 +66,4 @@ transformer:
   pos_dropout: 0.1
   trans_dropout: 0.1
 vocab: 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~ '
-weights: https://vocr.vn/data/vietocr/vgg_transformer.pth
+weights: OCR/weights/vgg_transformer.pth

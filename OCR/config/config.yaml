@@ -1,6 +1,0 @@
-model:
-  abcv2:
-    weights: './weights/abcnetv2.pth'
-  vietocr:
-    nameconfig: 'vgg_transformer'
-    weights: './weights/transformerocr.pth'
