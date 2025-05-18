@@ -5,11 +5,11 @@ import cv2
 
 
 class VietOCRWrapper:
-    def __init__(self, config_path='OCR/config/vietocr.yaml', device=None):
+    def __init__(self, config_path='OCR/config/vietocr.yml', device=None):
         config = load_config(config_path)
-        self.cfg = Cfg.load_config_from_name(config.config_name)
-        print(f"[✔] VietOCR config: {config.config_name}")
+        self.cfg = Cfg.load_config_from_file('OCR/config/config.yml')
         self.cfg['weights'] = config.weights
+        print('Weights:', self.cfg['weights'])
         self.cfg['device'] = device or ('cuda' if cv2.cuda.getCudaEnabledDeviceCount() > 0 else 'cpu')
         self.ocr = Predictor(self.cfg)
 

@@ -2,6 +2,8 @@ from detectron2.data.detection_utils import read_image
 from adet.config import get_cfg
 import os
 
+import torch
+
 def prepare_cfg_detectron(args):
     cfg = get_cfg()
     
@@ -11,6 +13,8 @@ def prepare_cfg_detectron(args):
     cfg.merge_from_file(config_file_path)
     cfg.merge_from_list(['MODEL.WEIGHTS', weights_path])
     
+    
+    cfg.MODEL.DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     # Set score_threshold for builtin models
     threshold = float(args.confidence_threshold)
     cfg.MODEL.RETINANET.SCORE_THRESH_TEST = threshold

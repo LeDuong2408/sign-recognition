@@ -9,6 +9,7 @@ import cv2
 from OCR.detector import prepare_cfg_detectron, read_image
 from OCR.detector.detectron2_handler import Detectron2TextDetector 
 
+from OCR.detector.yolov8_handler import YoloV8Handler
 from OCR.ocr.paddleocr_handler import PaddleOCRWrapper
 
 from OCR.ocr.vietocr_handler import VietOCRWrapper
@@ -56,6 +57,47 @@ def get_image_files(input_path: str) -> list:
         print(f"Input path {input_path} is not a directory.")
         return []
 
+def load_abcnetv2_model(cfg):
+    """
+    Initialize ABCNetv2 model with specified parameters.
+    """
+    from OCR.detector.detectron2_handler import Detectron2TextDetector 
+
+    abcnet = Detectron2TextDetector(cfg)
+    return abcnet
+def paddleocr_model(lang: str, use_angle_cls: bool = True, cls: bool = True, det: bool = True, rec: bool = False, det_db_box_thresh: float = 0.3):
+    """
+    Initialize PaddleOCR model with specified parameters.
+    """
+    from OCR.ocr.paddleocr_handler import PaddleOCRWrapper
+    
+    paddle = PaddleOCRWrapper(
+        lang=lang,
+        use_angle_cls=use_angle_cls,
+        cls=cls,
+        det=det,
+        rec=rec,
+        det_db_box_thresh=det_db_box_thresh
+    )
+    return paddle
+def load_vietocr_model(config_path: str, device: str):
+    """
+    Initialize VietOCR model with specified parameters.
+    """
+    from OCR.ocr.vietocr_handler import VietOCRWrapper
+    vietocr = VietOCRWrapper(
+        config_path=config_path,
+        device=device
+    )
+    return vietocr
+
+def load_yolov8_model(path: str):
+    """
+    Initialize YOLOv8 model with specified parameters.
+    """
+    model = YoloV8Handler(model_path=path)
+    return model
+
 def main():
     args = get_parser().parse_args()
     cfg = prepare_cfg_detectron(args)
@@ -65,7 +107,7 @@ def main():
     output_path = os.path.abspath(args.output)
     os.makedirs(output_path, exist_ok=True)
 
-    detectron = Detectron2TextDetector(cfg)
+    detectron_abcnet = Detectron2TextDetector(cfg)
 
     paddle = PaddleOCRWrapper(
         lang='vi',
@@ -77,9 +119,11 @@ def main():
     )
     
     vietocr = VietOCRWrapper(
-        config_path='OCR/config/vietocr.yaml',
+        config_path='OCR/config/vietocr.yml',
         device=device
     )
+    
+    yolov8 = load_yolov8_model("OCR/detector/signboard_detection_and_recognition/models/signboard_model.onnx")
     
     print('Ready for predictions!')
     
@@ -102,16 +146,24 @@ def main():
         # Step 1: rotate image
         img_rotate = paddle.get_rotated_image(img)
 
-        # Step 2: detect text lines
-        boxes_line = paddle.get_boxes_line(img_rotate)
+        boxes_signboard = yolov8.get_boxes_best_score(img_rotate)
+        
+        if boxes_signboard is None:
+            print(f"Cannot detect signboard in image: {img_path}")
+            continue
+        visualize_detection(img_rotate, boxes_signboard, f"{filename_noext}_signboard", output_path)
 
+        image_signboard =  perspective_transform(img_rotate, boxes_signboard[0])
+        
+        # Step 2: detect text lines
+        boxes_line = paddle.get_boxes_line(image_signboard)
         # Step 3: detect each box words
-        boxes_word, box_scores = detectron(img_rotate)
+        boxes_word, box_scores = detectron_abcnet(image_signboard)
         
         texts = []
         
         for i, box in enumerate(boxes_word):
-            crop_img = perspective_transform(img_rotate, box)
+            crop_img = perspective_transform(image_signboard, box)
             crop_img = preprocess_crop_img(crop_img)
             
             try:
@@ -121,24 +173,24 @@ def main():
                 print(f"Error processing box {i}: {e}")
                 texts.append("")
         # Step 4: assign words to lines
-        lines = assign_words_to_lines(boxes_word, boxes_line, texts, img_rotate.shape)
+        lines = assign_words_to_lines(boxes_word, boxes_line, texts, image_signboard.shape)
         
         if filename in trace:
             print("Duplicated filename:", filename)
             break
         trace[filename] = 1
 
-        # with open(os.path.join(output_path, f"{filename_noext}.txt"), 'w', encoding="utf-8") as f:
-        #     for box, score in zip(boxes_word, box_scores):
-        #         points_str = ','.join(f"{x},{y}" for x, y in box)
-        #         f.write(f"{points_str},{score}\n")
+        with open(os.path.join(output_path, f"{filename_noext}_score.txt"), 'w', encoding="utf-8") as f:
+            for box, score in zip(boxes_word, box_scores):
+                points_str = ','.join(f"{x},{y}" for x, y in box)
+                f.write(f"{points_str},{score}\n")
         
         with open(os.path.join(output_path, f"{filename_noext}.txt"), "w", encoding="utf-8") as f:
             line_text = [word[1] for line in lines for word in line]
             f.write(' | '.join(line_text))
         
-        visualize_detection(img_rotate, boxes_word, filename_noext, output_path)
-        visualize_detection(img_rotate, boxes_line, f'{filename_noext}_line', output_path)
+        visualize_detection(image_signboard, boxes_word, filename_noext, output_path)
+        visualize_detection(image_signboard, boxes_line, f'{filename_noext}_line', output_path)
         
         print(f"[✔] Done {filename} - {id+1}/{len(files)}")
     print(f"Time taken: {time.time() - start_time:.2f} seconds")
