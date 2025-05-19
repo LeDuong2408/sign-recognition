@@ -6,11 +6,11 @@ from OCR.utils.image_utils import pad_bbox
 
 
 class PaddleOCRWrapper:
-    def __init__(self, lang='en', use_angle_cls=True, det_db_box_thresh=0.3, cls=True, det=True, rec=False):
+    def __init__(self, lang='en', use_gpu=False, use_angle_cls=True, det_db_box_thresh=0.3, cls=True, det=True, rec=False):
         self.cls = cls
         self.det = det
         self.rec = rec
-        self.ocr = PaddleOCR(use_angle_cls=use_angle_cls, lang=lang, det_db_box_thresh=det_db_box_thresh)
+        self.ocr = PaddleOCR(use_gpu=use_gpu, use_angle_cls=use_angle_cls, lang=lang, det_db_box_thresh=det_db_box_thresh)
 
     def detect(self, image):
         return self.ocr.ocr(image, cls=self.cls, det=self.det, rec=self.rec)

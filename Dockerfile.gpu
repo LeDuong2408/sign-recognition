@@ -1,0 +1,32 @@
+# Dùng base image CUDA runtime (Ubuntu 20.04 + CUDA 11.7 + cuDNN 8)
+FROM nvidia/cuda:11.7.1-cudnn8-runtime-ubuntu20.04
+
+# Cài đặt hệ thống và Miniconda
+RUN apt-get update && apt-get install -y wget bzip2 build-essential gcc git && \
+    wget https://repo.anaconda.com/miniconda/Miniconda3-latest-Linux-x86_64.sh -O miniconda.sh && \
+    bash miniconda.sh -b -p /opt/conda && rm miniconda.sh
+
+ENV PATH="/opt/conda/bin:$PATH"
+
+# Tạo conda env và cài đặt packages GPU
+RUN bash -c "\
+    source /opt/conda/etc/profile.d/conda.sh && \
+    conda create -n env python=3.9.21 -y && \
+    conda activate env && \
+    conda install ninja -c conda-forge -y && \
+    mkdir -p /app/package && \
+    git clone https://github.com/aim-uofa/AdelaiDet.git /app/package/AdelaiDet && \
+    pip install numpy==1.24.4 && \
+    pip install torch==2.1.2+cu117 torchvision==0.16.2+cu117 torchaudio==2.1.2 --index-url https://download.pytorch.org/whl/cu117 && \
+    cd /app/package/AdelaiDet && pip install -e . && \
+    python -m pip install 'git+https://github.com/facebookresearch/detectron2.git' && \
+    pip install opencv-contrib-python==4.5.5.62 opencv-python==4.6.0.66 && \
+    pip install paddleocr==2.7.2 && \
+    pip install paddlepaddle-gpu==2.6.2 -f https://www.paddlepaddle.org.cn/whl/mkl/avx/stable.html && \
+    pip install vietocr ultralytics==8.3.54 \
+"
+
+WORKDIR /app
+
+ENTRYPOINT [ "conda", "run", "--no-capture-output", "-n", "env", "bash", "-c" ]
+CMD ["bash"]

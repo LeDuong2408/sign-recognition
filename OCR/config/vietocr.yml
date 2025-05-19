@@ -1,2 +1,3 @@
 config_name: 'vgg_transformer'
 weights: 'OCR/weights/transformerocr.pth'
+config_path: 'OCR/config/vgg_transformer.yml'

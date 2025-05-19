@@ -7,7 +7,7 @@ import cv2
 class VietOCRWrapper:
     def __init__(self, config_path='OCR/config/vietocr.yml', device=None):
         config = load_config(config_path)
-        self.cfg = Cfg.load_config_from_file('OCR/config/config.yml')
+        self.cfg = Cfg.load_config_from_file(config.config_path)
         self.cfg['weights'] = config.weights
         print('Weights:', self.cfg['weights'])
         self.cfg['device'] = device or ('cuda' if cv2.cuda.getCudaEnabledDeviceCount() > 0 else 'cpu')
