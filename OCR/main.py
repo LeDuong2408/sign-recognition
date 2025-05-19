@@ -110,6 +110,7 @@ def main():
     detectron_abcnet = Detectron2TextDetector(cfg)
 
     paddle = PaddleOCRWrapper(
+        use_gpu=(device == 'cuda'),
         lang='vi',
         use_angle_cls=True,
         cls=True,
@@ -180,10 +181,10 @@ def main():
             break
         trace[filename] = 1
 
-        with open(os.path.join(output_path, f"{filename_noext}_score.txt"), 'w', encoding="utf-8") as f:
-            for box, score in zip(boxes_word, box_scores):
-                points_str = ','.join(f"{x},{y}" for x, y in box)
-                f.write(f"{points_str},{score}\n")
+        # with open(os.path.join(output_path, f"{filename_noext}_score.txt"), 'w', encoding="utf-8") as f:
+        #     for box, score in zip(boxes_word, box_scores):
+        #         points_str = ','.join(f"{x},{y}" for x, y in box)
+        #         f.write(f"{points_str},{score}\n")
         
         with open(os.path.join(output_path, f"{filename_noext}.txt"), "w", encoding="utf-8") as f:
             line_text = [word[1] for line in lines for word in line]

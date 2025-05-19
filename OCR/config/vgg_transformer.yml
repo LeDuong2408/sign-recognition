@@ -31,7 +31,7 @@ dataloader:
   num_workers: 0
   pin_memory: true
 dataset:
-  data_root: c:\University-HCMUTE\KLTN\code\sign-recognition\OCR\data\img
+  data_root: ./OCR/data/img
   image_height: 32
   image_max_width: 512
   image_min_width: 32 
@@ -66,4 +66,4 @@ transformer:
   pos_dropout: 0.1
   trans_dropout: 0.1
 vocab: 'aAàÀảẢãÃáÁạẠăĂằẰẳẲẵẴắẮặẶâÂầẦẩẨẫẪấẤậẬbBcCdDđĐeEèÈẻẺẽẼéÉẹẸêÊềỀểỂễỄếẾệỆfFgGhHiIìÌỉỈĩĨíÍịỊjJkKlLmMnNoOòÒỏỎõÕóÓọỌôÔồỒổỔỗỖốỐộỘơƠờỜởỞỡỠớỚợỢpPqQrRsStTuUùÙủỦũŨúÚụỤưƯừỪửỬữỮứỨựỰvVwWxXyYỳỲỷỶỹỸýÝỵỴzZ0123456789!"#$%&''()*+,-./:;<=>?@[\]^_`{|}~ '
-weights: OCR/weights/vgg_transformer.pth
+weights: ./OCR/weights/vgg_transformer.pth
