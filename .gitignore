@@ -12,7 +12,7 @@ OCR/output/*
 !NER/data/metrics_VLSP2018.txt
 !.gitignore
 OCR/data
-OCR/input_image
+OCR/input_image/*
 OCR/output
 OCR/train/train_lmdb
 OCR/train/valid_lmdb
