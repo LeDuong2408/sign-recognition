@@ -11,10 +11,10 @@ OCR/output/*
 !NER/data/metrics.txt
 !NER/data/metrics_VLSP2018.txt
 !.gitignore
-OCR/weights_v1
-OCR/data
+OCR/weights/*
+OCR/data/*
 OCR/input_image/*
-OCR/output
+OCR/output/*
 OCR/train/train_lmdb
 OCR/train/valid_lmdb
 OCR/detector/signboard_detection_and_recognition
