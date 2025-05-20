@@ -1,6 +1,4 @@
 import ast
-
-
 def parse_str_2_list(input: str) -> list[str]:
     try:
       if not input:
