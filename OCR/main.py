@@ -124,7 +124,7 @@ def main():
         device=device
     )
     
-    yolov8 = load_yolov8_model("OCR/detector/signboard_detection_and_recognition/models/signboard_model.onnx")
+    yolov8 = load_yolov8_model("OCR/weights/signboard_model.onnx")
     
     print('Ready for predictions!')
     
