@@ -4,11 +4,11 @@ import os
 
 import torch
 
-def prepare_cfg_detectron(args):
+def prepare_cfg_detectron(confidence_threshold: float = 0.3, weights: str = 'OCR/weights/abcnetv2.pth', config_file: str = 'OCR/config/BAText/TotalText/v2_attn_R_50.yaml'):
     cfg = get_cfg()
     
-    config_file_path = os.path.abspath(args.config_file)
-    weights_path = os.path.abspath(args.weights)
+    config_file_path = os.path.abspath(config_file)
+    weights_path = os.path.abspath(weights)
     
     cfg.merge_from_file(config_file_path)
     cfg.merge_from_list(['MODEL.WEIGHTS', weights_path])
@@ -16,7 +16,7 @@ def prepare_cfg_detectron(args):
     
     cfg.MODEL.DEVICE = "cuda" if torch.cuda.is_available() else "cpu"
     # Set score_threshold for builtin models
-    threshold = float(args.confidence_threshold)
+    threshold = float(confidence_threshold)
     cfg.MODEL.RETINANET.SCORE_THRESH_TEST = threshold
     cfg.MODEL.ROI_HEADS.SCORE_THRESH_TEST = threshold
     cfg.MODEL.FCOS.INFERENCE_TH_TEST = threshold

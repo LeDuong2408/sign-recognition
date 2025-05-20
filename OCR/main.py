@@ -23,20 +23,20 @@ def get_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser()
     parser.add_argument("--input", required=True, help="Path to input image or directory")
     parser.add_argument("--output", default="output", help="Path to output directory")
-    parser.add_argument("--confidence_threshold", default=0.4)
-    parser.add_argument("--weights", required=True, help="Path to model ABCnetv2 weights")
-    parser.add_argument(
-        "--opts",
-        help="Modify config options using the command-line 'KEY VALUE' pairs",
-        default=[],
-        nargs=argparse.REMAINDER,
-    )
-    parser.add_argument(
-        "--config-file",
-        default="OCR/config/BAText/TotalText/v2_attn_R_50.yaml",
-        metavar="FILE",
-        help="path to config file",
-    )
+    # parser.add_argument("--confidence_threshold", default=0.4)
+    # parser.add_argument("--weights", required=True, help="Path to model ABCnetv2 weights")
+    # parser.add_argument(
+    #     "--opts",
+    #     help="Modify config options using the command-line 'KEY VALUE' pairs",
+    #     default=[],
+    #     nargs=argparse.REMAINDER,
+    # )
+    # parser.add_argument(
+    #     "--config-file",
+    #     default="OCR/config/BAText/TotalText/v2_attn_R_50.yaml",
+    #     metavar="FILE",
+    #     help="path to config file",
+    # )
     return parser
 
 def get_image_files(input_path: str) -> list:
@@ -100,7 +100,7 @@ def load_yolov8_model(path: str):
 
 def main():
     args = get_parser().parse_args()
-    cfg = prepare_cfg_detectron(args)
+    cfg = prepare_cfg_detectron()
     device = 'cuda' if cv2.cuda.getCudaEnabledDeviceCount() > 0 else 'cpu'
     
     input_path = os.path.abspath(args.input)
@@ -145,16 +145,16 @@ def main():
         filename_noext = filename.split(".")[0]
         
         # Step 1: rotate image
-        img_rotate = paddle.get_rotated_image(img)
+        img_rotated = paddle.get_rotated_image(img)
 
-        boxes_signboard = yolov8.get_boxes_best_score(img_rotate)
+        boxes_signboard = yolov8.get_boxes_best_score(img_rotated)
         
         if boxes_signboard is None:
-            print(f"Cannot detect signboard in image: {img_path}")
-            continue
-        visualize_detection(img_rotate, boxes_signboard, f"{filename_noext}_signboard", output_path)
-
-        image_signboard =  perspective_transform(img_rotate, boxes_signboard[0])
+            print(f"[ERROR YOLO] Cannot detect signboard in image: {img_path}")
+            image_signboard = img_rotated.copy()
+        else:
+            visualize_detection(img_rotated, boxes_signboard, f"{filename_noext}_signboard", output_path)
+            image_signboard =  perspective_transform(img_rotated, boxes_signboard[0])
         
         # Step 2: detect text lines
         boxes_line = paddle.get_boxes_line(image_signboard)
