@@ -39,7 +39,7 @@ def get_parser() -> argparse.ArgumentParser:
     # )
     return parser
 
-def get_image_files(input_path: str) -> list:
+def get_image_files(input_path: str) -> list: # type: ignore
     """
     Get all image files from the input directory.
     """
@@ -57,12 +57,12 @@ def get_image_files(input_path: str) -> list:
         print(f"Input path {input_path} is not a directory.")
         return []
 
-def load_abcnetv2_model(cfg):
+def load_abcnetv2_model():
     """
     Initialize ABCNetv2 model with specified parameters.
     """
     from OCR.detector.detectron2_handler import Detectron2TextDetector 
-
+    cfg = prepare_cfg_detectron()
     abcnet = Detectron2TextDetector(cfg)
     return abcnet
 def paddleocr_model(lang: str, use_angle_cls: bool = True, cls: bool = True, det: bool = True, rec: bool = False, det_db_box_thresh: float = 0.3):

@@ -1,6 +1,6 @@
 from  OCR.vietocr_sign import get_ocr_text, get_ocr_text2
 from NER.Using_pipeline import get_ner_result
-from POST_OCR.inference import inference_post_ocr
+from POST_OCR.inference_byt5 import inference_post_ocr
 from transformers import pipeline, AutoTokenizer, AutoModelForTokenClassification, T5ForConditionalGeneration
 import torch
 from OCR.config import PATH_IMAGE

@@ -3,12 +3,11 @@ import os
 import re
 from google import genai
 from google.genai import types
-from dotenv import load_dotenv
+from app.core.conf import settings
 
 class OCRCorrection:
     def __init__(self, model_name: str = "gemini-2.0-flash" , temperature: float = 0.1, response_mime_type: str = "application/json"):
-        load_dotenv()
-        api_key=os.environ.get("GEMINI_API_KEY")
+        api_key=settings.GEMINI_API_KEY
         if not api_key:
             raise ValueError("GEMINI_API_KEY environment variable is not set.")
         

@@ -1,12 +1,13 @@
 import cv2
 import numpy as np
 from paddleocr import PaddleOCR
+import torch
 
 from OCR.utils.image_utils import pad_bbox
 
 
 class PaddleOCRWrapper:
-    def __init__(self, lang='en', use_gpu=False, use_angle_cls=True, det_db_box_thresh=0.3, cls=True, det=True, rec=False):
+    def __init__(self, lang='vi', use_gpu=torch.cuda.is_available(), use_angle_cls=True, det_db_box_thresh=0.3, cls=True, det=True, rec=False):
         self.cls = cls
         self.det = det
         self.rec = rec
