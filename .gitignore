@@ -24,6 +24,7 @@ POST_OCR/process_fake_error_ocr
 POST_OCR/vietnamese_ocr_error_corrector
 POST_OCR/ocr_correction_template.ipynb
 POST_OCR/test-llama.py
+pipline.py
 *.pyc
 __pycache__/
 
