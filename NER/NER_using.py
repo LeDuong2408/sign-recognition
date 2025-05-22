@@ -86,7 +86,7 @@ def ner_batch_sentence(
     input_ids = encodings["input_ids"]
     attention_mask = encodings["attention_mask"]
     offsets_batch = encodings["offset_mapping"]
-    
+     
     # Build DataLoader
     dataset = torch.utils.data.TensorDataset(input_ids, attention_mask, offsets_batch)
     loader = DataLoader(dataset, batch_size=batch_size)

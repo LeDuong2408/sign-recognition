@@ -9,7 +9,7 @@ paddleocr_line_det = load_paddleocr_model()
 vietocr_tex_rec = load_vietocr_model()
 yolov8_sign_det = load_yolov8_model()
 
-def inference_ocr(imgs: list[Image.Image]) -> list[str]:
+def inference_ocr(imgs: list[Image.Image]) -> list[str]: # type: ignore
     
     texts_ocr: list[str] = []
     

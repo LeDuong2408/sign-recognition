@@ -4,6 +4,8 @@ from datetime import datetime
 import re
 import torch
 
+
+
 def format_out(ner_result):
     name_shop = ""
     address = ""
@@ -32,7 +34,10 @@ def format_out(ner_result):
     address = address.rstrip(", ").strip()
     name_shop = merge_wordpieces(name_shop)
     address = merge_wordpieces(address)
-    return f"Name: {name_shop} \nAddress: {address} \n"
+    return {
+        "name": name_shop,
+        "address": address,
+    }
 
 def merge_wordpieces(text):
     tokens = text.split()
@@ -61,14 +66,31 @@ def extract_phone_number(text):
     
     return unique_numbers if unique_numbers else None
         
+
+
+def load_model_ner():
+    tokenizer = AutoTokenizer.from_pretrained("duongai248/ner-location-vietnam")
+    model = AutoModelForTokenClassification.from_pretrained("duongai248/ner-location-vietnam")
+    nlp = pipeline("ner", model=model, tokenizer=tokenizer)
+    return nlp
+nlp = load_model_ner()
+
 def get_ner_result(text, nlp):
     phone = extract_phone_number(text)
     if phone:
-        out =  format_out(nlp(text)) + "Tel: " + phone
+        out =  format_out(nlp(text))
+        out['tel'] = phone
     else:
-        out =  format_out(nlp(text)) + "Tel: "
+        out =  format_out(nlp(text))
+        out['tel'] = ""
     return out
-
+def inference_ner(ocred_texts: list[str]) -> list[dict]:
+    res = []
+    for text in ocred_texts:
+        result = get_ner_result(text=text.title(), nlp=nlp)
+        res.append(result)
+    return res
+        
 if __name__ == "__main__":
 
     tokenizer = AutoTokenizer.from_pretrained("NlpHUST/ner-vietnamese-electra-base")
