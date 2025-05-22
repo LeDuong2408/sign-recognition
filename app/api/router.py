@@ -13,11 +13,13 @@ from pipline import pipline
 router = APIRouter(prefix=settings.FASTAPI_API_V1_PATH)
 
 class ImageURLs(BaseModel):
-    urls: list[str]
+    img_urls: list[str]
 
 class TextOcrResp(BaseModel):
     raw_text: list[str]
     corrected_text: list[str]
+    ner_text: list[dict]
+    
 
 def get_response_base():
     return ResponseBase()
@@ -26,10 +28,10 @@ def get_response_base():
 def home():
     return "Hello World!"
 @router.post('/inference-pipline-ocr')
-async def sign_board_recognition(img_urls: ImageURLs, RESPONSE: Annotated[ResponseBase, Depends(get_response_base)]):
+async def sign_board_recognition(body: ImageURLs, RESPONSE: Annotated[ResponseBase, Depends(get_response_base)]):
     
-    images = await asyncio.gather(*(fetch_image(url) for url in img_urls.urls))
+    images = await asyncio.gather(*(fetch_image(url) for url in body.img_urls))
     
-    raw_text, corrected_text = pipline(imgs=images)
-    resp = TextOcrResp(raw_text=raw_text, corrected_text=corrected_text)
-    return RESPONSE(data=resp)
+    raw_text, corrected_text, ner_text = pipline(imgs=images)
+    # resp = TextOcrResp(raw_text=raw_text, corrected_text=corrected_text, ner_text=ner_text)
+    return RESPONSE(data=ner_text)

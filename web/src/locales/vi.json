@@ -1,0 +1,166 @@
+{
+  "Index": {
+    "meta_title": "SignBoard OCR",
+    "meta_description": "Công cụ miễn phí và mã nguồn mở trích xuất dữ liệu bảng hiệu."
+  },
+  "Navbar": {
+    "sign_in": "Đăng nhập",
+    "sign_up": "Đăng ký",
+    "product": "Sản phẩm",
+    "docs": "Tài liệu",
+    "blog": "Blog",
+    "community": "Cộng đồng",
+    "company": "Công ty"
+  },
+  "Hero": {
+    "follow_twitter": "Khóa Luận Tốt Nghiệp",
+    "title": "<important>Sign-Board OCR</important> Công cụ trích xuất dữ liệu từ bảng hiệu một cách dễ dàng.",
+    "description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS.",
+    "primary_button": "Bắt đầu ngay",
+    "secondary_button": "Star trên GitHub"
+  },
+  "Sponsors": {
+    "title": "Tài trợ bởi"
+  },
+  "Features": {
+    "section_subtitle": "Tính năng",
+    "section_title": "Khám phá toàn bộ tiềm năng của Mẫu SaaS",
+    "section_description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS.",
+    "feature1_title": "Next.js",
+    "feature2_title": "React",
+    "feature3_title": "Tailwind CSS",
+    "feature4_title": "TypeScript",
+    "feature5_title": "Shadcn UI",
+    "feature6_title": "ESLint",
+    "feature_description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS."
+  },
+  "Pricing": {
+    "section_subtitle": "Tính năng",
+    "section_title": "Khám phá toàn bộ tiềm năng của Mẫu SaaS",
+    "section_description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS.",
+    "button_text": "Bắt đầu ngay"
+  },
+  "PricingPlan": {
+    "free_plan_name": "Miễn phí",
+    "premium_plan_name": "Cao cấp",
+    "enterprise_plan_name": "Doanh nghiệp",
+    "free_plan_description": "Dành cho cá nhân",
+    "premium_plan_description": "Dành cho nhóm nhỏ",
+    "enterprise_plan_description": "Dành cho các tổ chức lớn",
+    "feature_team_member": "{number} thành viên",
+    "feature_website": "{number} trang web",
+    "feature_storage": "{number} GB lưu trữ",
+    "feature_transfer": "{number} TB băng thông",
+    "feature_email_support": "Hỗ trợ qua email",
+    "plan_interval_month": "tháng",
+    "plan_interval_year": "năm"
+  },
+  "FAQ": {
+    "question": "Lorem ipsum dolor sit amet, consectetur adipiscing elit?",
+    "answer": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Aliquam aliquam enim dui, id consequat turpis ullamcorper ac. Mauris id quam dolor. Nullam eu egestas turpis. Proin risus elit, sollicitudin in mi a, accumsan euismod turpis. In euismod mi sed diam tristique hendrerit."
+  },
+  "CTA": {
+    "title": "Bạn đã sẵn sàng?",
+    "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
+    "button_text": "Star trên GitHub"
+  },
+  "Footer": {
+    "product": "Sản phẩm",
+    "docs": "Tài liệu",
+    "blog": "Blog",
+    "community": "Cộng đồng",
+    "company": "Công ty",
+    "terms_of_service": "Điều khoản dịch vụ",
+    "privacy_policy": "Chính sách bảo mật",
+    "designed_by": "Thiết kế bởi <author></author>"
+  },
+  "ProtectFallback": {
+    "not_enough_permission": "Bạn không có quyền thực hiện hành động này"
+  },
+  "SignIn": {
+    "meta_title": "Đăng nhập",
+    "meta_description": "Đăng nhập tài khoản của bạn một cách dễ dàng và thuận tiện."
+  },
+  "SignUp": {
+    "meta_title": "Đăng ký",
+    "meta_description": "Tạo tài khoản mới một cách dễ dàng với quy trình đăng ký thân thiện."
+  },
+  "DashboardLayout": {
+    "home": "Trang chủ",
+    "todos": "Việc cần làm",
+    "members": "Thành viên",
+    "billing": "Thanh toán",
+    "settings": "Cài đặt"
+  },
+  "Dashboard": {
+    "meta_title": "Bảng điều khiển SaaS Template",
+    "meta_description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS."
+  },
+  "DashboardIndex": {
+    "title_bar": "Bảng điều khiển",
+    "title_bar_description": "Chào mừng bạn đến với bảng điều khiển",
+    "message_state_title": "Hãy bắt đầu nào",
+    "message_state_description": "Bạn có thể tùy chỉnh trang này tại <code>src/app/[locale]/(auth)/dashboard/page.tsx</code>",
+    "message_state_button": "Đọc tài liệu"
+  },
+  "UserProfile": {
+    "title_bar": "Hồ sơ người dùng",
+    "title_bar_description": "Xem và quản lý hồ sơ của bạn"
+  },
+  "OrganizationProfile": {
+    "title_bar": "Quản lý tổ chức",
+    "title_bar_description": "Quản lý tổ chức của bạn"
+  },
+  "Billing": {
+    "title_bar": "Thanh toán",
+    "title_bar_description": "Quản lý hóa đơn và đăng ký của bạn",
+    "current_section_title": "Gói hiện tại",
+    "current_section_description": "Điều chỉnh gói thanh toán phù hợp với nhu cầu của bạn",
+    "manage_subscription_button": "Quản lý đăng ký"
+  },
+  "BillingOptions": {
+    "current_plan": "Gói hiện tại",
+    "upgrade_plan": "Bắt đầu ngay"
+  },
+  "CurrentPlanDetails": {
+    "next_renew_date": "Đăng ký của bạn sẽ gia hạn vào {date}"
+  },
+  "CheckoutConfirmation": {
+    "title_bar": "Xác nhận thanh toán",
+    "message_state_title": "Thanh toán thành công",
+    "message_state_description": "Thanh toán của bạn đã được xử lý thành công. Cảm ơn bạn đã mua hàng!",
+    "message_state_button": "Quay lại trang Thanh toán"
+  },
+  "DataTable": {
+    "no_results": "Không có kết quả."
+  },
+  "Todos": {
+    "title_bar": "Danh sách việc cần làm",
+    "title_bar_description": "Xem và quản lý danh sách việc cần làm của bạn",
+    "add_todo_button": "Thêm mới"
+  },
+  "TodoTableColumns": {
+    "open_menu": "Mở menu",
+    "edit": "Chỉnh sửa",
+    "delete": "Xóa",
+    "title_header": "Tiêu đề",
+    "message_header": "Nội dung"
+  },
+  "AddTodo": {
+    "title_bar": "Thêm việc cần làm",
+    "add_todo_section_title": "Tạo một việc cần làm mới",
+    "add_todo_section_description": "Điền vào biểu mẫu dưới đây để tạo việc cần làm mới"
+  },
+  "EditTodo": {
+    "title_bar": "Chỉnh sửa việc cần làm",
+    "edit_todo_section_title": "Chỉnh sửa việc cần làm",
+    "edit_todo_section_description": "Điền vào biểu mẫu dưới đây để chỉnh sửa việc cần làm"
+  },
+  "TodoForm": {
+    "title_label": "Tiêu đề",
+    "title_description": "Nhập tiêu đề mô tả cho việc cần làm.",
+    "message_title": "Nội dung",
+    "message_description": "Nhập chi tiết nội dung cho việc cần làm.",
+    "submit_button": "Gửi"
+  }
+}

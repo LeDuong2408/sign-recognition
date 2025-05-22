@@ -6,6 +6,8 @@ import httpx
 import numpy as np
 from OCR import inference_ocr
 from POST_OCR import inference_ocr_correction
+from NER.Using_pipeline import inference_ner
+
 from PIL import Image
 def pipline(imgs: list[Image.Image]) -> list[str]: # type: ignore
     
@@ -13,6 +15,7 @@ def pipline(imgs: list[Image.Image]) -> list[str]: # type: ignore
     
     corrected_texts = inference_ocr_correction(ocred_texts=ocred_texts)
     
+    ner_result = inference_ner(corrected_texts)
     # TODO NER here ...................................................
     
-    return ocred_texts,corrected_texts
+    return ocred_texts,corrected_texts, ner_result
