@@ -2,8 +2,7 @@
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { HistoryItem } from "@/hooks/actions"
-import { formatDistanceToNow } from "date-fns"
-import { vi } from "date-fns/locale"
+
 import { Eye, Plus } from "lucide-react"
 
 interface HistorySidebarProps {
