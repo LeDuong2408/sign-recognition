@@ -1,4 +1,46 @@
-create requirements file: conda env export -n sr > requirements.yml
-create env: conda env create -f requirements.yml
-del env: conda remove --name sr --all
-install BasicSR model:  pip install git+https://github.com/XPixelGroup/BasicSR.git
+Run project step-by-step:
+- Pull docker image: docker pull leduong2408/sign-recognition:v1
+- Run docker: docker run -it --rm -v F:/University_HCMUTE/N4_HK2/sign-recognition:/app -w /app -p 8000:8000 --name kltn leduong2408/sign-recognition:v1 bash 
+(Note: change path to project on your computer correctly)
+- Active conda envirement: conda activate env
+- cd OCR/detector
+- git clone https://github.com/aim-uofa/AdelaiDet.git
+- cd AdelaiDet
+- pip install -e .
+- cd /app/
+- apt-get update && apt-get install -y nano
+- pip install -r requirements.txt or requirements_cpu.txt 
+- Access and get API KEY at: https://aistudio.google.com/apikey
+    - PASTE API KEY to .env file.
+- Add funtion to class Beziers in "./OCR/detector/AdelaiDet/adet/structures/beziers.py":
+    "def __len__(self) -> int:
+            """
+            Returns:
+                int: The number of bezier curves.
+            """
+            return self.tensor.size(0)"
+- Download all model and move to direction OCR/weights/ from link: https://drive.google.com/drive/u/0/folders/1TinwA3Wb7tTehJG8SK-wwDX706e6EWLF
+- Access and get API KEY at: https://dashboard.clerk.com/apps/app_2xXfHXmKWi1ZKgn5mgjJw0TlTCK/instances/ins_2xXfHa6pIQK2NBOJIbqRtQ7JJhq/api-keys
+    - Paste API Key to /web/.env.local
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+        CLERK_SECRET_KEY=...
+    - Create file /web/.env:
+        OCR_API_URL=http://localhost:8000/api/v1/inference-pipline-ocr
+        UPLOAD_PRESET=sign-board
+        CLOUDINARY_API_KEY=816545419225756
+        CLOUDINARY_API_SECRECT=H77K8Hig3fSOLth6sYQc6QlUw54
+        CLOUDINARY_CLOUD_NAME=dnclfveb3
+        CLOUDINARY_URL=cloudinary://816545419225756:H77K8Hig3fSOLth6sYQc6QlUw54@dnclfveb3
+        # Các biến frontend yêu cầu (tạm thời fake nếu chưa dùng)
+        DATABASE_URL=postgres://user:password@localhost:5432/db
+        STRIPE_SECRET_KEY=sk_test_dummy
+        STRIPE_WEBHOOK_SECRET=whsec_dummy
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_dummy
+
+run server:
+- Back end:
+uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+- Front-end:
+cd web
+npm install
+npm run dev

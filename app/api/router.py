@@ -9,7 +9,7 @@ from fastapi import Depends, FastAPI
 from app.common.response_schema import ResponseBase
 from app.utils.process_img import fetch_image
 from app.core.conf import settings
-from pipline import pipline
+from pipeline import pipeline
 router = APIRouter(prefix=settings.FASTAPI_API_V1_PATH)
 
 class ImageURLs(BaseModel):
@@ -32,6 +32,6 @@ async def sign_board_recognition(body: ImageURLs, RESPONSE: Annotated[ResponseBa
     
     images = await asyncio.gather(*(fetch_image(url) for url in body.img_urls))
     
-    raw_text, corrected_text, ner_text = pipline(imgs=images)
+    raw_text, corrected_text, ner_text = pipeline(imgs=images)
     # resp = TextOcrResp(raw_text=raw_text, corrected_text=corrected_text, ner_text=ner_text)
     return RESPONSE(data=ner_text)

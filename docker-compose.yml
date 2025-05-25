@@ -1,0 +1,19 @@
+version: '3.8'
+
+services:
+  sign-recognition-service:
+    image: leduong2408/sign-recognition:v1
+    container_name: kltn_compose
+    ports:
+      - "8000:8000"
+    volumes:
+      - F:/University_HCMUTE/N4_HK2/sign-recognition:/app 
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    entrypoint: [] 
+    command: /bin/bash -c "echo 'Trying to activate conda and start Uvicorn...' && \
+                           source /opt/conda/etc/profile.d/conda.sh && \
+                           conda activate env && \
+                           echo 'Conda environment activated. Starting Uvicorn...' && \
+                           uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload"

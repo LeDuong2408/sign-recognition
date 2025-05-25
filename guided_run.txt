@@ -1,0 +1,39 @@
+Affer pull project, you do step-by-step below:
+1: Download all model and move to direction OCR/weights/ from link: https://drive.google.com/drive/u/0/folders/1TinwA3Wb7tTehJG8SK-wwDX706e6EWLF
+2: Access and get API KEY at: https://dashboard.clerk.com/apps/app_2xXfHXmKWi1ZKgn5mgjJw0TlTCK/instances/ins_2xXfHa6pIQK2NBOJIbqRtQ7JJhq/api-keys
+    - Paste API Key to /web/.env.local
+        NEXT_PUBLIC_CLERK_PUBLISHABLE_KEY=...
+        CLERK_SECRET_KEY=...
+    - Create file /web/.env:
+        OCR_API_URL=http://localhost:8000/api/v1/inference-pipline-ocr
+        UPLOAD_PRESET=sign-board
+        CLOUDINARY_API_KEY=816545419225756
+        CLOUDINARY_API_SECRECT=H77K8Hig3fSOLth6sYQc6QlUw54
+        CLOUDINARY_CLOUD_NAME=dnclfveb3
+        CLOUDINARY_URL=cloudinary://816545419225756:H77K8Hig3fSOLth6sYQc6QlUw54@dnclfveb3
+        # Các biến frontend yêu cầu (tạm thời fake nếu chưa dùng)
+        DATABASE_URL=postgres://user:password@localhost:5432/db
+        STRIPE_SECRET_KEY=sk_test_dummy
+        STRIPE_WEBHOOK_SECRET=whsec_dummy
+        NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_dummy
+3. - Access and get API KEY at: https://aistudio.google.com/apikey
+    - PASTE API KEY to .env file:
+    GEMINI_API_KEY=...
+4.  cd OCR/detector
+    git clone https://github.com/aim-uofa/AdelaiDet.git
+5. - Add funtion to class Beziers in "./OCR/detector/AdelaiDet/adet/structures/beziers.py":
+    "def __len__(self) -> int:
+            """
+            Returns:
+                int: The number of bezier curves.
+            """
+            return self.tensor.size(0)"
+6. Pull docker image: 
+    docker pull leduong2408/sign-recognition:v1
+7. Run backend: 
+    docker-compose up --build
+8. Run frontend:
+    cd web
+    npm install
+    npm run dev
+9. Access and using model at: http://localhost:3000/

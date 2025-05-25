@@ -1,6 +1,5 @@
 docker pull vanwdaiii/kltn-cpu:v2
-# docker run -it --rm -v C:/University-HCMUTE/KLTN/code/sign-recognition:/app -w /app vanwdaiii/kltn-cpu:v1 bash
-docker run -it --rm -v C:/University-HCMUTE/KLTN/code/sign-recognition:/app -w /app --name kltn vanwdaiii/kltn-cpu:v2 bash 
+docker run -it -v F:/University_HCMUTE/N4_HK2/sign-recognition:/app -w /app -p 8000:8000 --name kltn vanwdaiii/kltn-cpu:v2 bash 
 conda activate env
 # cd OCR/detector/AdelaiDet/
 # pip install -e .

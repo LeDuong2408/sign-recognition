@@ -118,7 +118,7 @@ def fallback_cluster_unmatched_words(unmatched_word_boxes, unmatched_texts, line
     ])
 
     
-    db = DBSCAN(eps=avg_height * eps_ratio, min_samples=1).fit(X)
+    db = DBSCAN(eps=avg_height * eps_ratio, min_samples=1).fit(float(X))
     labels = db.labels_
 
     cluster_map = {}
