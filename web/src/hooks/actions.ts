@@ -1,6 +1,5 @@
 "use server"
 
-import { put, list } from "@vercel/blob"
 import type { StoreData } from "@/types/store-data"
 
 export interface HistoryItem {

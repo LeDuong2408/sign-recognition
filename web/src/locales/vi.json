@@ -14,7 +14,7 @@
   },
   "Hero": {
     "follow_twitter": "Khóa Luận Tốt Nghiệp",
-    "title": "<important>Sign-Board OCR</important> Công cụ trích xuất dữ liệu từ bảng hiệu một cách dễ dàng.",
+    "title": "<important>SignBoard OCR</important> Công cụ trích xuất dữ liệu từ bảng hiệu một cách dễ dàng.",
     "description": "Mẫu trang đích miễn phí và mã nguồn mở cho doanh nghiệp SaaS của bạn, được xây dựng với Next.js, TypeScript, Shadcn UI và Tailwind CSS.",
     "primary_button": "Bắt đầu ngay",
     "secondary_button": "Star trên GitHub"
