@@ -7,7 +7,7 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - F:/University_HCMUTE/N4_HK2/sign-recognition:/app 
+      - F:/University_HCMUTE/N4_HK2/sign-recognition:/app # check path-to-project correctly 
     working_dir: /app
     tty: true
     stdin_open: true

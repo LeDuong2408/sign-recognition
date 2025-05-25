@@ -30,9 +30,12 @@ Affer pull project, you do step-by-step below:
             return self.tensor.size(0)"
 6. Pull docker image: 
     docker pull leduong2408/sign-recognition:v1
-7. Run backend: 
+7. Run backend:
+    - Turn on CMD and run:
     docker-compose up --build
+    (Note: before run backend, check path-to-project in docker-compose.yml correctly)
 8. Run frontend:
+    - Turn on CMD and run:
     cd web
     npm install
     npm run dev
