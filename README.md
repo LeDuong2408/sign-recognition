@@ -24,7 +24,7 @@ STRIPE_WEBHOOK_SECRET=whsec_dummy
 NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY=pk_test_dummy
 ```
 4. Access and get API KEY Gemini at [Link](https://aistudio.google.com/apikey)
-PASTE API KEY to .env file:
+PASTE API KEY to `.env` file:
 ```env
 GEMINI_API_KEY=...
 ```
