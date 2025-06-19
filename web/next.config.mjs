@@ -21,7 +21,8 @@ export default withSentryConfig(
       reactStrictMode: true,
       experimental: {
         // Related to Pino error with RSC: https://github.com/orgs/vercel/discussions/3150
-        serverComponentsExternalPackages: ['pino'],
+        // serverComponentsExternalPackages: ['pino'],
+        serverExternalPackages: ['@clerk/nextjs','pino'],
       },
       webpack: (config) => {
         // config.externals is needed to resolve the following errors:

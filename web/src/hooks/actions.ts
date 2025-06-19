@@ -1,27 +1,29 @@
-"use server"
+"use server";
 
-import type { StoreData } from "@/types/store-data"
+import type { StoreData } from "@/types/store-data";
 
 export interface HistoryItem {
-  id: string
-  url: string
-  name: string
-  timestamp: number
+  id: string;
+  url: string;
+  name: string;
+  timestamp: number;
 }
 
 // Hàm tải lên hình ảnh và trích xuất dữ liệu
-export async function uploadAndExtract(formData: FormData): Promise<{ results: StoreData[] }> {
-  const files: File[] = []
-  const entries = Array.from(formData.entries())
+export async function uploadAndExtract(
+  formData: FormData
+): Promise<{ results: StoreData[] }> {
+  const files: File[] = [];
+  const entries = Array.from(formData.entries());
 
   for (const [key, value] of entries) {
     if (key.startsWith("image-") && value instanceof File) {
-      files.push(value)
+      files.push(value);
     }
   }
 
   if (files.length === 0) {
-    throw new Error("Không có file nào được chọn")
+    throw new Error("Không có file nào được chọn");
   }
 
   try {
@@ -38,83 +40,87 @@ export async function uploadAndExtract(formData: FormData): Promise<{ results: S
 
     //   return blob.url
     // })
-    const CLOUD_NAME='dnclfveb3'
-    const UPLOAD_PRESET = 'sign-board '
+    const CLOUD_NAME = "dnclfveb3";
+    const UPLOAD_PRESET = "sign-board ";
     const uploadPromises = files.map(async (file) => {
-      const timestamp = Date.now()
-      const randomStr = Math.random().toString(36).substring(2, 10)
-      const uploadForm = new FormData()
-      uploadForm.append("file", file)
-      uploadForm.append("upload_preset", UPLOAD_PRESET)
-      uploadForm.append("folder", "sign-board-ocr") // optional, đã có trong tên
-      uploadForm.append("public_id", `${timestamp}-${randomStr}-${file.name}`)
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 10);
+      const uploadForm = new FormData();
+      uploadForm.append("file", file);
+      uploadForm.append("upload_preset", UPLOAD_PRESET);
+      uploadForm.append("folder", "sign-board-ocr"); // optional, đã có trong tên
+      uploadForm.append("public_id", `${timestamp}-${randomStr}-${file.name}`);
 
-      const response = await fetch(`https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`, {
-        method: "POST",
-        body: uploadForm
-      })
+      const response = await fetch(
+        `https://api.cloudinary.com/v1_1/${CLOUD_NAME}/image/upload`,
+        {
+          method: "POST",
+          body: uploadForm,
+        }
+      );
 
-      const data = await response.json()
+      const data = await response.json();
 
       if (!response.ok) {
-        throw new Error(`Upload thất bại: ${data.error?.message || response.statusText}`)
+        throw new Error(
+          `Upload thất bại: ${data.error?.message || response.statusText}`
+        );
       }
 
-      return data.secure_url as string // Link ảnh HTTPS trên Cloudinary
-    })
+      return data.secure_url as string; // Link ảnh HTTPS trên Cloudinary
+    });
 
-    const imageUrls = await Promise.all(uploadPromises)
+    const imageUrls = await Promise.all(uploadPromises);
     // Mô phỏng thời gian xử lý OCR
-    await new Promise((resolve) => setTimeout(resolve, 2000))
+    await new Promise((resolve) => setTimeout(resolve, 2000));
 
     // 2. Trích xuất dữ liệu từ các URL hình ảnh
-    const results = await extractSignBoardData(imageUrls)
+    const results = await extractSignBoardData(imageUrls);
 
     return {
       results,
-    }
+    };
   } catch (error) {
-    console.error("Lỗi khi xử lý hình ảnh:", error)
-    throw new Error("Không thể xử lý hình ảnh. Vui lòng thử lại sau.")
+    console.error("Lỗi khi xử lý hình ảnh:", error);
+    throw new Error("Không thể xử lý hình ảnh. Vui lòng thử lại sau.");
   }
 }
 
 function encodeBasicAuth(key: string, secret: string): string {
-  return Buffer.from(`${key}:${secret}`).toString("base64")
+  return Buffer.from(`${key}:${secret}`).toString("base64");
 }
-
 
 // Hàm lấy lịch sử ảnh từ Cloudinary
 export async function getUploadHistory(): Promise<HistoryItem[]> {
-    // Trả về dữ liệu mẫu khi lỗi
-    return [
-      {
-        id: "sample-1",
-        url: "/example-1.png?height=400&width=600",
-        name: "Mẫu 1",
-        timestamp: Date.now() - 86400000,
-      },
-      {
-        id: "sample-2",
-        url: "/example-2.png?height=400&width=600",
-        name: "Mẫu 2",
-        timestamp: Date.now() - 172800000,
-      },
-      {
-        id: "sample-3",
-        url: "/example-3.png?height=400&width=600",
-        name: "Mẫu 3",
-        timestamp: Date.now() - 259200000,
-      },
-      {
-        id: "sample-4",
-        url: "/example-4.png?height=400&width=600",
-        name: "Mẫu 4",
-        timestamp: Date.now() - 259200000,
-      },
-    ]
-}
+  // Trả về dữ liệu mẫu khi lỗi
 
+  return [
+    {
+      id: "sample-1",
+      url: "/example-1.jpg?height=400&width=600",
+      name: "Mẫu 1",
+      timestamp: Date.now() - 86400000,
+    },
+    {
+      id: "sample-2",
+      url: "/example-2.png?height=400&width=600",
+      name: "Mẫu 2",
+      timestamp: Date.now() - 172800000,
+    },
+    {
+      id: "sample-3",
+      url: "/example-3.png?height=400&width=600",
+      name: "Mẫu 3",
+      timestamp: Date.now() - 259200000,
+    },
+    {
+      id: "sample-4",
+      url: "/example-4.png?height=400&width=600",
+      name: "Mẫu 4",
+      timestamp: Date.now() - 259200000,
+    },
+  ];
+}
 
 // // Hàm lấy lịch sử ảnh từ Cloudinary
 // export async function getUploadHistory(): Promise<HistoryItem[]> {
@@ -182,10 +188,12 @@ export async function getUploadHistory(): Promise<HistoryItem[]> {
 //   }
 // }
 
-export async function extractSignBoardData(imageUrls: string[]): Promise<StoreData[]> {
+export async function extractSignBoardData(
+  imageUrls: string[]
+): Promise<StoreData[]> {
   try {
     // Gọi API OCR thực tế
-    const OCR_API_URL = process.env.OCR_API_URL || ""
+    const OCR_API_URL = process.env.OCR_API_URL || "";
     // const OCR_API_KEY = process.env.OCR_API_KEY
 
     // if (!OCR_API_KEY) {
@@ -194,7 +202,7 @@ export async function extractSignBoardData(imageUrls: string[]): Promise<StoreDa
 
     // Gọi API OCR với các URL hình ảnh
 
-    const response = await fetch(OCR_API_URL, { 
+    const response = await fetch(OCR_API_URL, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -207,27 +215,27 @@ export async function extractSignBoardData(imageUrls: string[]): Promise<StoreDa
           detectStoreInfo: true,
         },
       }),
-    })
+    });
 
     if (!response.ok) {
-      const errorText = await response.text()
-      console.error("Lỗi từ API OCR:", errorText)
-      throw new Error(`Lỗi khi gọi API OCR: ${response.status}`)
+      const errorText = await response.text();
+      console.error("Lỗi từ API OCR:", errorText);
+      throw new Error(`Lỗi khi gọi API OCR: ${response.status}`);
     }
 
-    const rsp = await response.json()
+    const rsp = await response.json();
     // Chuyển đổi kết quả từ API sang định dạng StoreData
     // Điều chỉnh theo cấu trúc phản hồi thực tế từ API của bạn
-    const results: StoreData[] = rsp.data
+    const results: StoreData[] = rsp.data;
     // .map((result: any) => ({
     //   name: result.name || "",
     //   address: result.address || "",
     //   tel: result.tel || "",
     // }))
 
-    return results
+    return results;
   } catch (error) {
-    console.error("Lỗi khi trích xuất dữ liệu:", error)
+    console.error("Lỗi khi trích xuất dữ liệu:", error);
 
     // Nếu có lỗi, trả về dữ liệu mẫu để kiểm tra giao diện
     // Trong môi trường sản xuất, bạn có thể muốn ném lỗi thay vì trả về dữ liệu mẫu
@@ -235,7 +243,6 @@ export async function extractSignBoardData(imageUrls: string[]): Promise<StoreDa
       name: `Cửa hàng mẫu ${i + 1}`,
       address: `Địa chỉ mẫu ${i + 1}`,
       tel: `0${Math.floor(Math.random() * 900000000) + 100000000}`,
-    }))
+    }));
   }
 }
-

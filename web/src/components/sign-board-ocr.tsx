@@ -3,7 +3,6 @@
 import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent } from "@/components/ui/card"
-// import { uploadAndExtract, getUploadHistory } from "@/app/actions"
 import { ImageUploader } from "@/components/image-uploader"
 import { ResultsDisplay } from "@/components/results-display"
 import { HistorySidebar } from "@/components/history-sidebar"
@@ -35,6 +34,11 @@ export function SignBoardOCR() {
         const historyData = await getUploadHistory()
         // Chỉ lấy tối đa 6 hình ảnh mẫu
         setSampleImages(historyData.slice(0, 6))
+        toast({
+          title: "Tải ảnh oke",
+          description: "Đã xảy ra lỗi khi tải hình ảnh mẫu",
+          variant: "default",
+        })
       } catch (err) {
         console.error("Lỗi khi lấy hình ảnh mẫu:", err)
         toast({
@@ -104,7 +108,6 @@ export function SignBoardOCR() {
       files.forEach((file, index) => {
         formData.append(`image-${index}`, file)
       })
-
       // Đợi một chút để người dùng thấy thông báo đầu tiên
       await new Promise((resolve) => setTimeout(resolve, 800))
       setLoadingMessage("Đang trích xuất dữ liệu từ hình ảnh...")

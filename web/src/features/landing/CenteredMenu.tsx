@@ -9,9 +9,9 @@ const CenteredMenu = (props: {
     <Link href="/">{props.logo}</Link>
 
     <nav>
-      {/* <ul className="flex flex-row items-center gap-x-6 text-lg font-medium [&_li:hover]:opacity-100 [&_li]:opacity-60">
+      <ul className="flex flex-row items-center gap-x-6 text-lg font-medium [&_li:hover]:opacity-100 [&_li]:opacity-60">
         {props.children}
-      </ul> */}
+      </ul>
     </nav>
 
     <div>

@@ -66,3 +66,35 @@ def preprocess(img, min_width = 32, min_height=32):
     
     return (img-mean[...,None,None]) / std[...,None,None]
 
+import cv2
+import numpy as np
+
+def get_rotated_image_by_hough(image):
+    gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
+    edges = cv2.Canny(gray, 50, 150, apertureSize=3)
+
+    lines = cv2.HoughLines(edges, 1, np.pi / 180, threshold=150)
+
+    if lines is None:
+        return image  # no lines detected
+
+    angles = []
+    for rho, theta in lines[:, 0]:
+        angle = (theta - np.pi / 2) * 180 / np.pi  # angle from vertical
+        if -45 < angle < 45:
+            angles.append(angle)
+
+    if not angles:
+        return image
+
+    median_angle = np.median(angles)
+    if abs(median_angle) < 1.5:
+        return image  # skip small rotation
+
+    (h, w) = image.shape[:2]
+    center = (w // 2, h // 2)
+    rot_mat = cv2.getRotationMatrix2D(center, median_angle, 1.0)
+    rotated = cv2.warpAffine(image, rot_mat, (w, h), flags=cv2.INTER_LINEAR, borderMode=cv2.BORDER_REPLICATE)
+    return rotated
+
+

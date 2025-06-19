@@ -2,9 +2,10 @@ import '@/styles/globals.css';
 
 import type { Metadata } from 'next';
 import { notFound } from 'next/navigation';
-import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { NextIntlClientProvider } from 'next-intl';
 
 import { AllLocales } from '@/utils/AppConfig';
+import { getMessages } from 'next-intl/server';
 
 export const metadata: Metadata = {
   icons: [
@@ -31,15 +32,23 @@ export const metadata: Metadata = {
   ],
 };
 
-export default function RootLayout(props: {
+export default async function RootLayout(props: {
   children: React.ReactNode;
   params: { locale: string };
 }) {
-  // Validate that the incoming `locale` parameter is valid
-  if (!AllLocales.includes(props.params.locale)) notFound();
+  // const params = props.params
+  // const { locale } = params
+  // // Validate that the incoming `locale` parameter is valid
+  // if (!AllLocales.includes(locale)) notFound();
 
-  // Using internationalization in Client Components
-  const messages = useMessages();
+  // // Using internationalization in Client Components
+  // const messages = useMessages();
+  const { locale } = props.params;
+
+  if (!AllLocales.includes(locale)) notFound();
+
+  // Lấy message trên server (async)
+  const messages = await getMessages({locale})
 
   return (
     <html lang={props.params.locale}>

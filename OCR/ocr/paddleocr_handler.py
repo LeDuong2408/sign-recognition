@@ -1,3 +1,4 @@
+import logging
 import cv2
 import numpy as np
 from paddleocr import PaddleOCR
@@ -19,6 +20,8 @@ class PaddleOCRWrapper:
     def get_boxes_line(self, image):
         result = self.ocr.ocr(image, cls=self.cls, det=self.det, rec=False)
         boxes = []
+        if not result[0]:
+            return []
         for line in result[0]:
                 box = pad_bbox(np.array(line), 2, image.shape)
                 boxes.append(box)
@@ -31,6 +34,10 @@ class PaddleOCRWrapper:
         result = self.ocr.ocr(image, cls=True, det=True, rec=False)
 
         angles = []
+        if not result[0]:
+            logging.warning('Cannot rotate image ')
+            print('Cannot rotate image')
+            return image
         for line in result[0]:
                 points = np.array(line, dtype=np.float32)
                 x1, y1 = points[0]

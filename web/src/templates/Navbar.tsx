@@ -18,37 +18,37 @@ const Navbar = () => {
         rightMenu={
           <>
             <li>
-              <Link href="/sign-in">{t('sign_in')}</Link>
+              {/* <Link href="/sign-in">{t('sign_in')}</Link> */}
             </li>
             <li>
-              <Link className={buttonVariants()} href="/sign-up">
+              {/* <Link className={buttonVariants()} href="/sign-up">
                 {t('sign_up')}
-              </Link>
+              </Link> */}
             </li>
             <li>
-              <LocaleSwitcher />
+              {/* <LocaleSwitcher /> */}
             </li>
           </>
         }
       >
         <li>
-          <Link href="/">{t('product')}</Link>
+          {/* <Link href="/">{t('product')}</Link> */}
         </li>
 
         <li>
-          <Link href="/">{t('docs')}</Link>
+          {/* <Link href="/">{t('docs')}</Link> */}
         </li>
 
         <li>
-          <Link href="/">{t('blog')}</Link>
+          {/* <Link href="/">{t('blog')}</Link> */}
         </li>
 
         <li>
-          <Link href="/">{t('community')}</Link>
+          {/* <Link href="/">{t('community')}</Link> */}
         </li>
 
         <li>
-          <Link href="/">{t('company')}</Link>
+          {/* <Link href="/">{t('company')}</Link> */}
         </li>
       </CenteredMenu>
     </Section>

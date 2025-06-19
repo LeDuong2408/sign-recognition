@@ -45,7 +45,10 @@ export function ImagePreview({ isOpen, imageUrl, onClose, imageTitle, storeData 
         document.body.style.overflow = originalStyle
       }
     }
+    return undefined;
   }, [isOpen])
+
+  
 
   // Xử lý sự kiện wheel toàn cục
   useEffect(() => {
@@ -64,6 +67,7 @@ export function ImagePreview({ isOpen, imageUrl, onClose, imageTitle, storeData 
 
         return false
       }
+      return false;
     }
 
     // Thêm passive: false để có thể gọi preventDefault()

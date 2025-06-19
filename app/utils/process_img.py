@@ -1,4 +1,5 @@
 from io import BytesIO
+import logging
 from PIL import Image
 import cv2
 import httpx
@@ -13,4 +14,5 @@ async def fetch_image(url: str) -> Image.Image:
             img = cv2.cvtColor(np.array(img), cv2.COLOR_RGB2BGR)
             return img
         except Exception as e:
+            logging.error(f'Failed to download image: {url}, error: {str(e)}')
             raise Exception(f"Failed to download image: {url}, error: {str(e)}")
