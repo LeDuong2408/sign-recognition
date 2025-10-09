@@ -14,16 +14,9 @@ from PIL import Image
 
 async def pipline(imgs: list[Image.Image]) -> list[str]:  # type: ignore
     logging.info("Start pipeline...")
-    print("Start pipeline...")
-    print("Start inference OCR...")
     ocred_texts = inference_ocr(imgs=imgs)
-    print("Done inference OCR")
-    print("Start inference OCR correction...")
     corrected_texts = inference_ocr_correction(ocred_texts=ocred_texts)
-    print("Done inference OCR correction")
-    print("Start inference NER...")
     ner_result = inference_ner(corrected_texts)
-    print("Done inference NER...")
     logging.info("Done pipeline")
 
     return ocred_texts, corrected_texts, ner_result

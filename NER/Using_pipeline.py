@@ -135,7 +135,13 @@ def get_ner_result(text, nlp):
 
 # TODO =============================================================
 def clean_text(text):
-    phrases_to_remove = ["Coca Cola NGHỈ XẢ HƠI", "Bia Việt"]
+    phrases_to_remove = [
+        "Coca Cola NGHỈ XẢ HƠI",
+        "Bia Việt",
+        "BIA VIỆT",
+        "NGHỈ XẢ HƠI",
+        "Coca Cola",
+    ]
     for phrase in phrases_to_remove:
         if phrase in text:
             text = text.replace(phrase, "")
